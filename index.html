@@ -192,6 +192,7 @@ textarea{min-height:120px;resize:vertical}
 .field{margin:20px 0}
 .field > label,.field legend{display:block;font:500 15px/1.4 var(--body);margin-bottom:8px;color:var(--obsidian)}
 .field .opt-lbl{font-weight:400;color:var(--verdin)}
+.fhint{font-size:14px;color:var(--verdin);margin:-2px 0 8px;line-height:1.45}
 .seg{display:flex;gap:10px;flex-wrap:wrap}
 .seg .opt{flex:1 1 130px}
 .seg .opt > label{padding:12px 18px;border-radius:999px;align-items:center}
@@ -322,9 +323,10 @@ footer a{display:inline-block;padding:10px 0;min-height:44px;line-height:24px}
 /* ============ CONFIG: fill these in before going live (see README) ============ */
 var CONFIG = {
   endpoint: 'https://script.google.com/macros/s/AKfycbxFP3Nf1BFBp4g-cwkDae5ZfhvkXblHn4U58Zj0FkrWijxyqkhXlSB9a775CUESIkwMzA/exec',                   // REQUIRED: your Google Apps Script Web app URL (ends in /exec)
-  privacyUrl: '',                 // REQUIRED: TMO's live privacy policy URL
+  privacyUrl: 'https://drive.google.com/file/d/1J_meBNJQO5utt-5gWjSjepQmKnfvBiUL/view?usp=drive_link',                 // REQUIRED: TMO's live privacy policy URL
   logoUrl: '',                    // optional: a different logo file. The TMO logo is already built in
   homeUrl: 'https://www.themorningowl.co',
+  requireWorkEmail: true,         // true: Gmail, Yahoo, Hotmail and similar are refused. The Apps Script checks this too
   allowTestMode: false            // true only on a private copy: add #test to the URL to preview without saving
 };
 /* ============================================================================ */
@@ -416,7 +418,7 @@ var CONFIG = {
       '<section class="lp-get" aria-label="What you get">' +
         '<div class="get free"><h2>Your free overview</h2><p class="when">Straight after the questions. No details needed.</p><ul>' +
           '<li>The one area worth investigating first</li><li>Which of your answers point there</li><li>A practical check you can do today</li></ul></div>' +
-        '<div class="get full"><h2>Your detailed breakdown</h2><p class="when">Free too. Opens on the page when you share your name and email or WhatsApp.</p><ul>' +
+        '<div class="get full"><h2>Your detailed breakdown</h2><p class="when">Free too. Opens on the page when you share your name, work email and website.</p><ul>' +
           '<li>Your priority issue and why it matters</li><li>Other areas your answers point to</li><li>What could explain each one, and how to check</li>' +
           '<li>Prioritised next steps that account for what you’ve already tried</li><li>The metrics to track</li></ul></div>' +
       '</section>' +
@@ -561,7 +563,7 @@ var CONFIG = {
   function renderForm() {
     if (S.lead) { S.phase = 'report'; render(); return; }            // already unlocked: never submit twice
     if (!ensureResult()) { S.phase = 'q'; render(); return; }
-    var c = S.contact || { name: '', method: '', email: '', whatsapp: '', link: '', optin: false };
+    var c = S.contact || { name: '', email: '', link: '', optin: false };
     S.contact = c;
     if (!S.subId) { S.subId = rid(); saveState(); }                   // one ID per submission attempt, reused on retry
     var fe = S.fieldErr || {};
@@ -575,39 +577,74 @@ var CONFIG = {
       (!canSubmit ? '<div class="alert info" role="note">Submissions aren’t switched on yet, so the detailed diagnostic can’t be unlocked. Please email <a href="mailto:info@themorningowl.co">info@themorningowl.co</a>.</div>' : '') +
       (S.error ? '<div class="alert" role="alert" id="formerr">' + esc(S.error) + '</div>' : '') +
       '<div class="field"><label for="f_name">Name</label><input type="text" id="f_name" name="name" autocomplete="name" autocapitalize="words" enterkeyhint="next" maxlength="80" value="' + esc(c.name) + '"' + inv('name') + '>' + er('name') + '</div>' +
-      '<fieldset class="field"><legend>How should we reach you?</legend><div class="seg">' +
-      ['email', 'whatsapp'].map(function (m) { return '<div class="opt"><input type="radio" name="method" id="m_' + m + '" value="' + m + '"' + (c.method === m ? ' checked' : '') + '><label for="m_' + m + '"><span class="mk" aria-hidden="true"></span><span>' + (m === 'email' ? 'Email' : 'WhatsApp') + '</span></label></div>'; }).join('') +
-      '</div>' + er('method') + '</fieldset>' +
-      (c.method === 'email' ? '<div class="field"><label for="f_email">Email address</label><input type="email" id="f_email" name="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="next" maxlength="160" value="' + esc(c.email) + '"' + inv('email') + '>' + er('email') + '</div>' : '') +
-      (c.method === 'whatsapp' ? '<div class="field"><label for="f_wa">WhatsApp number, with country code</label><input type="tel" id="f_wa" name="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" maxlength="24" placeholder="+60 12 345 6789" value="' + esc(c.whatsapp) + '"' + inv('whatsapp') + '>' + er('whatsapp') + '</div>' : '') +
-      '<div class="field"><label for="f_link">Business website or link <span class="opt-lbl">(optional)</span></label><input type="url" id="f_link" name="url" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" enterkeyhint="done" maxlength="300" placeholder="yourbusiness.com or @yourbusiness" value="' + esc(c.link) + '"' + inv('link') + '>' + er('link') + '</div>' +
+      '<div class="field"><label for="f_email">' + (CONFIG.requireWorkEmail ? 'Work email' : 'Email address') + '</label>' +
+        (CONFIG.requireWorkEmail ? '<p class="fhint" id="h_email">Please use your company email. Gmail, Yahoo, Hotmail and similar addresses aren’t accepted.</p>' : '') +
+        '<input type="email" id="f_email" name="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="next" maxlength="160" placeholder="you@yourcompany.com" value="' + esc(c.email) + '"' + inv('email') + (CONFIG.requireWorkEmail && !fe.email ? ' aria-describedby="h_email"' : '') + '>' + er('email') + '</div>' +
+      '<div class="field"><label for="f_link">Business website</label><p class="fhint" id="h_link">If you don’t have a website, paste the full link to your business’s Instagram, Facebook or marketplace shop.</p>' +
+        '<input type="url" id="f_link" name="url" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" enterkeyhint="done" maxlength="300" placeholder="yourbusiness.com" value="' + esc(c.link) + '"' + inv('link') + (!fe.link ? ' aria-describedby="h_link"' : '') + '>' + er('link') + '</div>' +
       '<div class="hp" aria-hidden="true"><label for="f_cw">Leave this empty</label><input type="text" id="f_cw" tabindex="-1" autocomplete="off"></div>' +
       '<p class="disclosure">We’ll use your details and answers to provide your diagnostic and may follow up about the issues you identified. ' + priv + '.</p>' +
       '<label class="consent" for="f_optin"><input type="checkbox" id="f_optin"' + (c.optin ? ' checked' : '') + '><span>Optional: also send me The Morning Owl’s occasional growth notes. You can unsubscribe at any time.</span></label>' +
       '<div class="nav" style="padding-bottom:0"><button class="btn btn-ghost" type="button" id="fback">Back to my overview</button>' +
-      '<button class="btn btn-primary" type="submit" id="unlock"' + (S.sending || !canSubmit ? ' disabled' : '') + ' aria-busy="' + (S.sending ? 'true' : 'false') + '">' + (S.sending ? 'Saving…' : S.error ? 'Try again' : 'Unlock my detailed diagnostic') + '</button></div></form>'));
+      '<button class="btn btn-primary" type="submit" id="unlock"' + (S.sending || S.checking || !canSubmit ? ' disabled' : '') + ' aria-busy="' + (S.sending ? 'true' : 'false') + '">' + (S.checking ? 'Checking your details…' : S.sending ? 'Saving…' : S.error ? 'Try again' : 'Unlock my detailed diagnostic') + '</button></div></form>'));
     var f = document.getElementById('lead');
     function sync() {
       c.name = document.getElementById('f_name').value; c.link = document.getElementById('f_link').value;
       var e = document.getElementById('f_email'); if (e) c.email = e.value;
-      var w = document.getElementById('f_wa'); if (w) c.whatsapp = w.value;
       c.optin = document.getElementById('f_optin').checked;
     }
     f.addEventListener('focusin', function () { if (!S.formStarted) { S.formStarted = true; track('form_start'); } });
     f.addEventListener('input', sync);
-    f.querySelectorAll('input[name=method]').forEach(function (r) { r.addEventListener('change', function () { sync(); c.method = r.value; delete S.fieldErr.method; renderForm(); var t = document.getElementById(r.value === 'email' ? 'f_email' : 'f_wa'); if (t) t.focus(); }); });
     document.getElementById('fback').onclick = function () { sync(); S.error = null; S.phase = 'overview'; render(); };
     f.addEventListener('submit', function (ev) { ev.preventDefault(); sync(); submit(document.getElementById('f_cw').value); });
   }
 
+  /* ---------- contact checks ----------
+     Format and free-email checks happen instantly. Then the page asks Google's public DNS whether the
+     email domain can receive email and whether the website exists. The Apps Script repeats all of this,
+     so it can't be skipped. These checks can't prove a particular inbox exists; only a code sent to it can. */
+  var FREE_EMAIL = ['gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.com.my', 'yahoo.co.uk', 'yahoo.com.sg', 'ymail.com', 'rocketmail.com', 'hotmail.com', 'hotmail.my',
+    'hotmail.co.uk', 'outlook.com', 'outlook.my', 'live.com', 'live.com.my', 'msn.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com', 'proton.me', 'protonmail.com',
+    'pm.me', 'gmx.com', 'gmx.net', 'mail.com', 'yandex.com', 'yandex.ru', 'zohomail.com', 'qq.com', '163.com', '126.com', 'sina.com', 'tutanota.com', 'tuta.io',
+    'hey.com', 'fastmail.com', 'inbox.com', 'rediffmail.com', 'streamyx.com', 'tm.net.my'];
+  var THROWAWAY = ['mailinator.com', 'guerrillamail.com', 'guerrillamail.net', 'sharklasers.com', '10minutemail.com', 'temp-mail.org', 'tempmail.com', 'yopmail.com',
+    'trashmail.com', 'getnada.com', 'dispostable.com', 'maildrop.cc', 'throwawaymail.com', 'mintemail.com', 'mohmal.com', 'emailondeck.com', 'fakeinbox.com', 'tempail.com'];
+  function emailDomain(e) { return String(e || '').trim().toLowerCase().split('@')[1] || ''; }
+  function linkHost(l) {
+    var t = String(l || '').trim(); if (!t) return '';
+    try { return new URL(/^https?:\/\//i.test(t) ? t : 'https://' + t).hostname.toLowerCase(); } catch (e) { return ''; }
+  }
   function validate(c) {
-    var e = {};
+    var e = {}, email = c.email.trim(), dom = emailDomain(email), l = c.link.trim();
     if (c.name.trim().length < 2) e.name = 'Enter your name.';
-    if (!c.method) e.method = 'Choose email or WhatsApp.';
-    if (c.method === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c.email.trim())) e.email = 'Enter a valid email address, for example name@company.com.';
-    if (c.method === 'whatsapp') { var d = c.whatsapp.replace(/\D/g, ''); if (c.whatsapp.trim().charAt(0) !== '+' || d.length < 8 || d.length > 15) e.whatsapp = 'Enter your number with the country code, starting with +, for example +60 12 345 6789.'; }
-    var l = c.link.trim(); if (l && !/^(https?:\/\/)?[^\s\/$.?#]+\.[^\s]{2,}$/i.test(l) && !/^@[\w.]{2,}$/.test(l)) e.link = 'Enter a web address or social handle, or leave this blank.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) e.email = 'Enter a valid email address, for example you@yourcompany.com.';
+    else if (THROWAWAY.indexOf(dom) >= 0) e.email = 'Temporary email addresses aren’t accepted. Please use your company email.';
+    else if (CONFIG.requireWorkEmail && FREE_EMAIL.indexOf(dom) >= 0) e.email = 'Please use your company email address. Addresses from ' + dom + ' aren’t accepted.';
+    if (!l) e.link = 'Enter your business website, or the full link to your business’s social page or shop.';
+    else if (/^@[\w.]+$/.test(l)) e.link = 'Enter the full link, for example instagram.com/' + l.slice(1) + '.';
+    else if (!/^(https?:\/\/)?[^\s\/$.?#]+\.[^\s]{2,}$/i.test(l) || !linkHost(l)) e.link = 'Enter a web address, for example yourbusiness.com.';
     return e;
+  }
+  // Google Public DNS (JSON). Returns 'yes', 'no', or 'unknown' when the lookup itself fails (we then let the server decide).
+  function dns(name, type) {
+    var ctl = ('AbortController' in window) ? new AbortController() : null, t = setTimeout(function () { if (ctl) ctl.abort(); }, 5000);
+    return fetch('https://dns.google/resolve?name=' + encodeURIComponent(name) + '&type=' + type, { signal: ctl ? ctl.signal : undefined })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { clearTimeout(t);
+        if (j.Status === 3) return 'no';
+        if (j.Status !== 0) return 'unknown';
+        var ans = (j.Answer || []).filter(function (a) { return type === 'MX' ? a.type === 15 && !/^0 \.?$/.test(a.data) : a.type === 1 || a.type === 5 || a.type === 28; });
+        return ans.length ? 'yes' : 'no'; })
+      .catch(function () { clearTimeout(t); return 'unknown'; });
+  }
+  function liveChecks(c) {
+    var dom = emailDomain(c.email), host = linkHost(c.link);
+    return Promise.all([dns(dom, 'MX'), dns(host, 'A')]).then(function (r) {
+      var e = {};
+      if (r[0] === 'no') e.email = 'We couldn’t find an email service for ' + dom + '. Check the spelling of your email address.';
+      if (r[1] === 'no') e.link = 'We couldn’t find a website at ' + host + '. Check the address.';
+      return e;
+    });
   }
 
   function sitVal(label) { var x = S.result.report.situation.filter(function (s) { return s[0] === label; })[0]; return x ? x[1] : ''; }
@@ -621,8 +658,8 @@ var CONFIG = {
     }).filter(Boolean);
     var codes = Object.assign({}, S.answers, { _v: ANSWER_VERSION });
     return {
-      action: 'submit', submission_id: S.subId, name: S.contact.name.trim(), method: S.contact.method,
-      email: S.contact.method === 'email' ? S.contact.email.trim() : '', whatsapp: S.contact.method === 'whatsapp' ? S.contact.whatsapp.trim() : '',
+      action: 'submit', submission_id: S.subId, name: S.contact.name.trim(), method: 'email',
+      email: S.contact.email.trim(), whatsapp: '',
       link: S.contact.link.trim(), marketing_opt_in: !!S.contact.optin, company_website: hp || '', elapsed_ms: Date.now() - S.formOpenedAt,
       business_type: sitVal('Business type'), sales_route: sitVal('Main sales route'), main_concern: sitVal('What you want to improve'), branch: c.b, first_finding: r.findings[0].id,
       answers: answers, answer_codes: codes, diagnostic: { overview: RL.overviewText(r.overview), detailed: RL.reportText(r.report) }, attribution: ATTR
@@ -630,11 +667,21 @@ var CONFIG = {
   }
 
   function submit(hp) {
-    if (S.sending || S.lead) return;                                   // guards against double taps and repeat submits
+    if (S.sending || S.checking || S.lead) return;                      // guards against double taps and repeat submits
     var e = validate(S.contact); S.fieldErr = e; S.error = null;
-    if (Object.keys(e).length) { renderForm(); var first = app.querySelector('[aria-invalid=true]') || app.querySelector('#m_email'); if (first) first.focus(); return; }
-    if (TEST) { S.lead = { test: true, method: S.contact.method, at: Date.now() }; S.phase = 'report'; render(); return; }
+    if (Object.keys(e).length) { showFieldErrors(); return; }
+    if (TEST) { S.lead = { test: true, method: 'email', at: Date.now() }; S.phase = 'report'; render(); return; }
     if (!LIVE) { S.error = 'Submissions aren’t switched on yet, so your details can’t be saved. Please email info@themorningowl.co.'; renderForm(); return; }
+    S.checking = true; renderForm();
+    liveChecks(S.contact).then(function (ce) {
+      S.checking = false;
+      if (Object.keys(ce).length) { S.fieldErr = ce; showFieldErrors(); track('lead_check_failed', { diag_error: Object.keys(ce).join(',') }); return; }
+      send(hp);
+    });
+  }
+  function showFieldErrors() { renderForm(); var first = app.querySelector('[aria-invalid=true]'); if (first) first.focus(); }
+
+  function send(hp) {
     S.sending = true; renderForm();
     var ctl = ('AbortController' in window) ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 25000);
@@ -643,12 +690,14 @@ var CONFIG = {
       .then(function (r) {
         clearTimeout(timer); S.sending = false;
         if (r.j && r.j.ok === true && r.j.lead_id) {
-          S.lead = { id: r.j.lead_id, token: r.j.token, method: S.contact.method, at: Date.now() }; S.phase = 'report'; S.contact = null; S.subId = null;
+          S.lead = { id: r.j.lead_id, token: r.j.token, method: 'email', at: Date.now() }; S.phase = 'report'; S.contact = null; S.subId = null;
           track('lead_submitted'); render(); return;
         }
         if (r.j && r.j.error === 'fields' && r.j.fields) {
-          var map = { name: 'Enter your name.', method: 'Choose email or WhatsApp.', email: 'Enter a valid email address.', whatsapp: 'Enter your number with the country code, starting with +.', link: 'Enter a web address or social handle, or leave this blank.' };
-          S.fieldErr = {}; Object.keys(r.j.fields).forEach(function (k) { S.fieldErr[k] = map[k] || 'Check this field.'; });
+          var map = { name: 'Enter your name.', email: 'Enter a valid email address.', link: 'Enter your business website, or the full link to your business’s social page or shop.',
+            free_email: 'Please use your company email address.', throwaway: 'Temporary email addresses aren’t accepted. Please use your company email.',
+            email_domain: 'We couldn’t find an email service for that address. Check the spelling.', link_domain: 'We couldn’t find a website at that address. Check it and try again.' };
+          S.fieldErr = {}; Object.keys(r.j.fields).forEach(function (k) { var v = r.j.fields[k]; S.fieldErr[k] = map[v] || map[k] || 'Check this field.'; });
           S.error = 'Some details need checking before we can save them.';
         } else if (r.j && r.j.error === 'rate') S.error = 'There have been several attempts with these details. Wait a while, then try again. Your answers are still here.';
         else if (r.j && r.j.error === 'too_fast') S.error = 'That was quicker than we expected. Check your details, then try again.';
@@ -743,7 +792,7 @@ var CONFIG = {
   function renderDiscuss() {
     var box = document.getElementById('discuss'); if (!box) return;
     var d = S.discuss;
-    if (d === 'done') { saveState(); box.innerHTML = '<div class="done" role="status">Thanks. The Morning Owl will contact you by ' + (S.lead.method === 'email' ? 'email' : 'WhatsApp') + ' about these results.</div>'; return; }
+    if (d === 'done') { saveState(); box.innerHTML = '<div class="done" role="status">Thanks. The Morning Owl will contact you by email about these results.</div>'; return; }
     box.innerHTML = (d && d.error ? '<div class="alert" role="alert">' + esc(d.error) + '</div>' : '') +
       '<button class="btn btn-accent" id="disc" type="button"' + (d === 'sending' ? ' disabled aria-busy="true"' : '') + '>' + (d === 'sending' ? 'Sending…' : d && d.error ? 'Try again' : 'Discuss my results with TMO') + '</button>';
     document.getElementById('disc').onclick = discuss;
@@ -761,7 +810,7 @@ var CONFIG = {
 
   /* ---------- progress that survives a refresh (this browser tab only) ----------
      Saved on every answer, including typed text. Stores answers, position, the submission ID and,
-     once unlocked, the report's ID and access token. Name, email, WhatsApp number and link are never stored. */
+     once unlocked, the report's ID and access token. Name, email and website are never stored. */
   var SAVE_KEY = 'tmo_diag_v2', OLD_KEYS = ['tmo_diag_v1'];
   function saveState() {
     if (TEST) return;
