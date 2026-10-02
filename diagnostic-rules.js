@@ -166,8 +166,8 @@
   function lc(s) { if (!s) return s; if (s.length > 1 && s[1] === s[1].toUpperCase() && /[A-Z]/.test(s[1])) return s; return s.charAt(0).toLowerCase() + s.slice(1); }
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-  var REFER = { q3: 'your main sales route is', q4: 'your priority is to', q5: 'you market through', q6: 'over the last three months,',
-    q7: 'most people stop at', q9: 'your follow-up answer was', q10: 'the channels you believe work best are', q11: 'you connect marketing to results through' };
+  var REFER = { q3: 'your main sales route is', q4: 'you want to', q5: 'you market through', q6: 'over the last three months,',
+    q7: 'most people stop at', q9: 'you said', q10: 'you think your best channels are', q11: 'you track results through' };
 
   function helpers(c, steps) {
     var byName = {};
@@ -220,7 +220,7 @@
     G: { acquire: 'how well enquiries match your services', convert: 'the next step after an enquiry', noshow: 'missed appointments', retain: 'follow-up visits', measure: 'connecting outcomes to sources' },
     H: { acquire: 'how well enquiries match your programme', convert: 'what happens after a trial or consultation', attend: 'why people stop', renew: 'what happens after the first programme', measure: 'following people from their source' },
     I: { demand: 'how shoppers understand your product', convert: 'what interested shoppers ask', promo: 'your promotions', retain: 'buying again', measure: 'the sales information you can access' } };
-  function q9Refer(c) { var g = c.goal === 'unclear' ? 'measure' : c.goal; var t = (Q9_TOPIC[c.b] || {})[g]; return t ? 'your answer on ' + t + ' was' : 'your follow-up answer was'; }
+  function q9Refer(c) { var g = c.goal === 'unclear' ? 'measure' : c.goal; var t = (Q9_TOPIC[c.b] || {})[g]; return t ? 'when we asked about ' + t + ', you said' : 'you said'; }
 
   var PAID = ['meta', 'google', 'tiktok_ads', 'mkt_ads', 'search_ads', 'linkedin', 'gmaps_ads', 'portals', 'appstore_ads', 'retail_media', 'platform_promos'];
   var SINGLE = { A: 'order', B: 'customer', C: 'order or visit', D: 'purchase', E: 'sale or lease', F: 'client', G: 'appointment', H: 'enrolment', I: 'purchase' };
@@ -244,21 +244,21 @@
       if (c.is('q9', 'mobile')) return 'mobile'; return 'generic'; },
     area: function (c) { return { dm: 'the step where customers receive the total price and payment details', mkt: 'why orders are cancelled or left unpaid',
       delivery: 'the total cost shoppers see before paying', payment: 'payment options at checkout', mobile: 'the mobile checkout journey', generic: 'checkout completion' }[this.mode(c)]; },
-    link: function () { return 'Reaching this step shows interest, but not necessarily a firm decision to buy. Something about the final step may be putting some people off, while others may still be comparing options.'; },
-    impact: function (c) { return 'People who reach this point have already cost money to attract, so losses here can be expensive even if only some of them were ready to buy.'; },
+    link: function () { return 'Getting to checkout shows real interest, even if not everyone there has made up their mind. Something at that last step may be putting some of them off.'; },
+    impact: function (c) { return 'You’ve already paid to get these people this far, so losing them at the last step is one of the more expensive places to lose anyone.'; },
     why: function (c) { return {
       dm: [E('The total with delivery may differ from what customers expected when they first asked.', 'Look at 20 conversations that went quiet after the total was sent. If many stopped right after seeing it, the total is the likely issue. If they stopped earlier, look elsewhere.', ['delivery', 'pricing']),
         E('Payment steps sent by message may feel slow or uncertain, so people put them off.', 'In the same conversations, note how long it took to send payment details. If slow replies went quiet more often than fast ones, the payment step is the likely issue.', ['checkout', 'response'])],
-      mkt: [E('Delivery fees or times shown at the final step may change the decision.', 'Group cancelled and unpaid orders by the reason in your seller centre. If delivery reasons lead, this explanation holds. If not, it is less likely.', ['delivery']),
-        E('Some orders may fail on payment method or cash-on-delivery rules.', 'Check how many unpaid or cancelled orders used cash on delivery or had a failed payment. A large share supports this explanation.', ['checkout'])],
-      delivery: [E('Delivery charges or delivery times may appear later than shoppers expect.', 'Note where the full delivery cost first appears on a phone and on a computer, then compare how many shoppers leave at that step with the step before. A clear jump at that step supports this.', ['delivery']),
+      mkt: [E('Delivery fees or times shown at the final step may change the decision.', 'Group cancelled and unpaid orders by the reason in your seller centre. If delivery comes up most, that’s your answer. If it barely shows up, look elsewhere.', ['delivery']),
+        E('Some orders may fail on payment method or cash-on-delivery rules.', 'Check how many unpaid or cancelled orders used cash on delivery or had a failed payment. If that’s a big chunk of them, payment is likely the problem.', ['checkout'])],
+      delivery: [E('Delivery charges or delivery times may appear later than shoppers expect.', 'Note where the full delivery cost first appears on a phone and on a computer, then compare how many shoppers leave at that step with the step before. If lots of people drop off right there, that’s probably it.', ['delivery']),
         E('Checkout itself may add friction, such as forced account creation or limited payment choices.', 'Place a test order on a phone and note every extra step, then check failed payments in your payment provider’s report. Forced steps or many failures support this.', ['checkout'])],
-      payment: [E('The payment methods your shoppers prefer may be missing or failing.', 'Compare the methods shoppers ask for with the ones you offer, and check failed payments by method. A missing popular method or a high failure rate supports this.', ['checkout']),
+      payment: [E('The payment methods your shoppers prefer may be missing or failing.', 'Compare the methods shoppers ask for with the ones you offer, and check failed payments by method. If a method people want is missing, or one keeps failing, that’s likely it.', ['checkout']),
         E('Some shoppers may reach checkout only to see the final total before deciding.', 'Check whether delivery or fees are added at checkout. If the total rises noticeably there and many leave at that step, this is likely part of it.', ['delivery', 'pricing'])],
-      mobile: [E('The payment or form steps may be harder to complete on a phone.', 'Compare checkout completion on mobile and desktop for the same period, and place a test order on a phone. A much weaker mobile rate supports this.', ['checkout', 'speed']),
+      mobile: [E('The payment or form steps may be harder to complete on a phone.', 'Compare checkout completion on mobile and desktop for the same period, and place a test order on a phone. If phones do much worse, the phone checkout is the likely culprit.', ['checkout', 'speed']),
         E('Mobile shoppers may arrive from ads with lower intent than desktop shoppers.', 'Compare mobile checkout completion for shoppers from ads with mobile shoppers from other sources. If only ad traffic is weak, intent is more likely than the phone journey.', ['targeting', 'creative'])],
-      generic: [E('The final cost, including delivery, may be higher than shoppers expected.', 'Compare how many shoppers leave at the step where delivery and fees are added with the step before. A clear jump there supports this.', ['delivery', 'pricing']),
-        E('A usability or technical problem, possibly on mobile, may be stopping some payments.', 'Check failed payments in your payment provider’s report and place a test order on a phone. Errors or frequent failures point to a technical cause.', ['checkout', 'speed'])] }[this.mode(c)]; },
+      generic: [E('The final cost, including delivery, may be higher than shoppers expected.', 'Compare how many shoppers leave at the step where delivery and fees are added with the step before. If people bail right at that point, the extra cost is probably what’s putting them off.', ['delivery', 'pricing']),
+        E('A usability or technical problem, possibly on mobile, may be stopping some payments.', 'Check failed payments in your payment provider’s report and place a test order on a phone. If you hit errors or see lots of failed payments, it’s a technical problem.', ['checkout', 'speed'])] }[this.mode(c)]; },
     check: function (c) { return { dm: 'Take your last 20 enquiries that went quiet and note the message each one stopped replying after.',
       mkt: 'Review your seller centre’s cancellation and unpaid-order reasons for the last 60 days.',
       delivery: 'Check whether shoppers can see the full delivery cost before they start checkout.',
@@ -281,10 +281,10 @@
       if (!e.length && !c.is('q8', 'fit', 'trust')) return null;
       return e.concat(s); },
     area: function (c) { return c.sub === 'dm' ? 'the answers customers get when they ask about a product' : 'how clearly your product pages answer shoppers’ questions'; },
-    link: function () { return 'People are arriving and looking, so part of the gap may sit between interest and the decision to buy.'; },
-    impact: function (c) { return 'Visitors who look but do not buy have already cost money to attract, so improving this step could lift ' + c.o + ' without extra reach.'; },
-    why: function () { return [E('Product pages may not answer questions about fit, use or quality that shoppers care about.', 'List the questions shoppers ask most and check each product page for the answer near the price. If your most-viewed, weakest pages miss them, this fits.', ['pages', 'proof']),
-      E('Some visitors may be browsing or comparing rather than ready to buy.', 'Compare add-to-cart rates by traffic source. If one source is much weaker than the others, visitor intent is the more likely cause.', ['targeting', 'creative'])]; },
+    link: function () { return 'People are turning up and looking around, so the gap may be somewhere between “this looks interesting” and actually buying.'; },
+    impact: function (c) { return 'You’ve already paid to bring these visitors in, so if this step gets better you could get more ' + c.o + ' without spending more on reach.'; },
+    why: function () { return [E('Product pages may not answer questions about fit, use or quality that shoppers care about.', 'List the questions shoppers ask most and check each product page for the answer near the price. If your busiest pages don’t answer them, that’s likely why people hesitate.', ['pages', 'proof']),
+      E('Some visitors may be browsing or comparing rather than ready to buy.', 'Compare add-to-cart rates by traffic source. If one source is far weaker than the rest, the problem is probably who that source sends you, rather than your pages.', ['targeting', 'creative'])]; },
     check: function () { return 'List the questions shoppers ask most often and check whether each product page answers them near the price.'; },
     action: function (c) { return c.sub === 'dm' ? 'Collect the ten questions customers ask most before going quiet, and check whether your standard replies answer them in the first message. This helps you decide whether the gap is information or price.' :
       'Compare views with add-to-cart numbers for your three most-viewed products in your store analytics or seller reports. If one stands out as weak, review that page against the questions shoppers ask before changing the others.'; },
@@ -302,14 +302,14 @@
       if (c.is('q6', 'spend_up_flat')) e.push(c.ev('q6', null, 0.5));
       return e; },
     area: function (c) { return c.local ? 'whether your marketing reaches people who can realistically visit or order' : 'who your marketing is reaching'; },
-    link: function (c) { return 'This suggests the issue may start before people consider buying, with who sees your marketing and why they respond.'; },
-    impact: function (c) { return 'If your marketing mostly reaches people who are unlikely to buy, more spending may bring attention without more ' + c.o + '.'; },
+    link: function (c) { return 'The problem may start earlier than you’d think, with who sees your marketing and why they respond to it.'; },
+    impact: function (c) { return 'If your marketing mostly reaches people who were never going to buy, spending more just buys you more attention, with no extra ' + c.o + ' to show for it.'; },
     why: function (c) {
-      if (c.is('q9', 'few_see', 'too_few', 'not_promoted')) return [E('Budget or reach may be too limited to build awareness among the right people.', 'Compare how many relevant people you reached each month with how many became ' + c.o + '. If the response rate is reasonable but the numbers are small, reach is the limit.', ['budget', 'new_channel']),
-        E('Your visibility in search, maps or listings may be low where people look for what you sell.', 'Search for what you sell the way a customer would, in your area, and note where you appear. Low or no visibility supports this.', ['local', 'pages'])];
-      if (c.local) return [E('Targeting may reach people who live or work too far away to visit.', 'Compare the location breakdown in ' + c.adRep + ' with where recent customers come from. A large share outside a realistic travel distance supports this.', ['targeting']),
+      if (c.is('q9', 'few_see', 'too_few', 'not_promoted')) return [E('Budget or reach may be too limited to build awareness among the right people.', 'Compare how many relevant people you reached each month with how many became ' + c.o + '. If people respond well but there just aren’t many of them, you need more reach.', ['budget', 'new_channel']),
+        E('Your visibility in search, maps or listings may be low where people look for what you sell.', 'Search for what you sell the way a customer would, in your area, and note where you appear. If you’re hard to find, that’s a big part of it.', ['local', 'pages'])];
+      if (c.local) return [E('Targeting may reach people who live or work too far away to visit.', 'Compare the location breakdown in ' + c.adRep + ' with where recent customers come from. If a lot of them are too far away to ever visit, your targeting is too wide.', ['targeting']),
         E('The message or offer may appeal to a different price range or occasion than yours.', 'Ask ten recent enquirers or visitors what they expected to pay or find. Frequent mismatches support this.', ['creative'])];
-      return [E('Targeting or placements may reach people outside your realistic customer base.', 'Compare the audience, placement and location breakdown in ' + c.adRep + ' with the profile of people who bought. A big difference supports this.', ['targeting']),
+      return [E('Targeting or placements may reach people outside your realistic customer base.', 'Compare the audience, placement and location breakdown in ' + c.adRep + ' with the profile of people who bought. If they look like different people, you’re paying to reach the wrong crowd.', ['targeting']),
         E('The message may attract clicks from people looking for something you do not sell.', 'Read the search terms or comments that led people to you, where available. Many unrelated needs support this.', ['creative'])]; },
     check: function (c) { return c.local ? 'Check the location breakdown in ' + c.adRep + ' against a realistic travel distance around your outlet.' :
       c.is('q9', 'few_see', 'too_few', 'not_promoted') ? 'Compare how many relevant people your marketing reaches each month, by source, with how many go on to buy, to see whether the limit is reach or response.' :
@@ -322,10 +322,10 @@
   R({ id: 'click_gap', goals: ['acquire', 'measure'], pri: 3,
     when: function (c) { var e = c.any('q9', ['clicks_no_visits']); return e.length ? e : null; },
     area: function () { return 'the gap between reported clicks and visits that actually arrive'; },
-    link: function () { return 'A large gap between clicks and visits can come from slow loading, tracking gaps or low-quality clicks, so those are worth ruling out before judging audience interest.'; },
-    impact: function () { return 'Clicks that never become visits can make ads look cheaper than they are and hide where people drop off.'; },
-    why: function () { return [E('Slow loading, especially on phones, may lose people before the page appears.', 'Test your landing page on a phone with a free speed tool, and compare clicks with visits by device. A bigger gap on mobile with slow load times supports this.', ['speed', 'website']),
-      E('Some clicks may be accidental or low quality, or your analytics tag may not fire on every page.', 'Compare clicks with visits by placement, and check your analytics tag is on every landing page. A gap on one placement points to click quality. A gap everywhere points to tracking.', ['tracking', 'targeting'])]; },
+    link: function () { return 'When lots of clicks never turn into visits, it’s usually slow pages, broken tracking or junk clicks, and it’s worth ruling those out before you blame the audience.'; },
+    impact: function () { return 'Clicks that never become visits make your ads look cheaper than they really are, and they hide where people are actually dropping off.'; },
+    why: function () { return [E('Slow loading, especially on phones, may lose people before the page appears.', 'Test your landing page on a phone with a free speed tool, and compare clicks with visits by device. If phones lose more people and the page is slow, speed is the issue.', ['speed', 'website']),
+      E('Some clicks may be accidental or low quality, or your analytics tag may not fire on every page.', 'Compare clicks with visits by placement, and check your analytics tag is on every landing page. If the gap is mostly on one placement, those clicks are low quality. If it’s everywhere, your tracking is probably broken.', ['tracking', 'targeting'])]; },
     check: function () { return 'Compare ad-reported clicks with analytics sessions from the same campaigns and dates, and test your landing page speed on a phone.'; },
     action: function () { return 'Put ad-platform clicks next to analytics sessions for the same campaigns over the same two weeks. A consistent gap on one placement or device tells you whether to fix page speed, tracking or placements first.'; },
     confirm: function () { return 'Campaign clicks compared with analytics sessions'; },
@@ -348,15 +348,15 @@
       if (c.is('q6', 'retailer_only')) e.push(c.ev('q6', 'retailer_only'));
       return e.length ? e : null; },
     area: function (c) { return 'how you connect your marketing to ' + c.o; },
-    link: function (c) { return 'Until marketing is connected to ' + c.o + ', it is hard to tell a demand problem from a conversion problem.'; },
-    impact: function (c) { return 'Without this link, it is hard to tell which spending produces ' + c.o + ' and which only produces activity.'; },
+    link: function (c) { return 'Until you can connect your marketing to ' + c.o + ', you can’t really tell whether you have too few people coming in or too few of them buying.'; },
+    impact: function (c) { return 'Without that link, you can’t tell which spending brings in ' + c.o + ' and which just keeps people busy.'; },
     why: function (c) {
-      if (c.is('q9', 'overlap', 'disagree')) return [E('Several platforms may each be claiming the same sale.', 'Add up the sales each platform claims for one week and compare with your actual orders. A total well above real orders confirms double counting.', ['tracking']),
+      if (c.is('q9', 'overlap', 'disagree')) return [E('Several platforms may each be claiming the same sale.', 'Add up the sales each platform claims for one week and compare with your actual orders. If their total is well above your real orders, they’re double counting.', ['tracking']),
         E('Their attribution windows and definitions may differ, so the totals may not match.', 'Note each platform’s attribution window and what it counts as a conversion. Different settings explain at least part of the mismatch.', ['tracking'])];
       if (c.b === 'I') return [E('Retailer orders may be standing in for shopper purchases, which move on a different timeline.', 'Ask your main retailer for sell-through data for one campaign period and compare it with your orders. If they move differently, retailer orders are a misleading guide.', ['tracking']),
         E('Campaign areas and stocked stores may not be compared directly.', 'Map campaign areas against stores that stock the product. If they rarely overlap, results cannot be judged yet.', ['tracking', 'stockists'])];
-      return [E('Tracking may stop at clicks, enquiries or engagement, so later outcomes are not tied to a source.', 'Take ten recent ' + c.o + ' and try to trace each one to its source. If most cannot be traced, this is the gap.', ['tracking']),
-        E('The records exist but may sit in separate systems that are not compared.', 'List where source, enquiry and sale information is kept. If each sits in a different place with nothing linking them, this fits.', ['tracking'])]; },
+      return [E('Tracking may stop at clicks, enquiries or engagement, so later outcomes are not tied to a source.', 'Take ten recent ' + c.o + ' and try to trace each one to its source. If you can’t trace most of them, that’s the gap to close first.', ['tracking']),
+        E('The records exist but may sit in separate systems that are not compared.', 'List where source, enquiry and sale information is kept. If it all sits in separate places with nothing tying it together, that’s why you can’t see it.', ['tracking'])]; },
     check: function (c) { return {
       A: 'Pick one recent week and match completed orders to their source using your order records, not ad-platform reports alone.',
       B: 'Choose one outcome that matters, such as a first useful action or a paid conversion, and check whether you can see the source for each new user who reached it.',
@@ -367,7 +367,7 @@
       G: 'For one month, record the source of each booking and whether the person attended.',
       H: 'Take your last intake’s enquiries and trace each one to trial, enrolment and attendance, grouped by source.',
       I: 'Line up campaign areas and dates with shopper sales by store where you can get them, rather than retailer orders.' }[c.b]; },
-    action: function (c) { return this.check(c) + (c.is('q5', 'creators', 'partners', 'referrals', 'offline', 'events', 'pr', 'sampling') ? ' Give creators, partners or offline activity their own codes or links, since they rarely show up in platform reports.' : '') + ' This tells you which sources produce ' + c.o + ' before you decide where to spend more.'; },
+    action: function (c) { return this.check(c) + (c.is('q5', 'creators', 'partners', 'referrals', 'offline', 'events', 'pr', 'sampling') ? ' Give creators, partners or offline activity their own codes or links, since they rarely show up in platform reports.' : '') + ' Then you’ll know which sources actually bring in ' + c.o + ' before you decide where to spend more.'; },
     confirm: function (c) { return 'Records that link each ' + SINGLE[c.b] + ' to where it came from'; },
     record: function (c) { return { A: 'A campaign report alongside completed orders for the same period', B: 'Signup, activation and payment records with their acquisition source',
       C: 'Order or booking records with how each customer found you', D: 'Till records with a source question or code', E: 'Enquiry records traced to viewings and completed transactions',
@@ -381,10 +381,10 @@
       if (c.b === 'D') e = e.concat(c.any('q7', ['discount_only']));
       return e.length ? e : null; },
     area: function (c) { return 'how much of your demand depends on promotions'; },
-    link: function () { return 'This suggests promotions may be doing more of the work than your regular offer.'; },
-    impact: function (c) { return 'If most ' + c.o + ' arrive only with a discount, growth can look healthy while each sale earns less.'; },
-    why: function () { return [E('Customers may have learned to wait for offers, so promotions bring forward sales that would have happened anyway.', 'Compare sales in the weeks just before and after each promotion with normal weeks. A dip around promotions supports this.', ['promo']),
-      E('The value of your regular offer may be less clear than it needs to be without a discount attached.', 'Compare how your full-price marketing describes the offer with what customers say they value. If the message is mostly about price, this fits.', ['creative', 'pricing'])]; },
+    link: function () { return 'It looks like your promotions may be doing more of the selling than your regular offer.'; },
+    impact: function (c) { return 'If most ' + c.o + ' only come with a discount attached, the numbers can look healthy while each sale quietly earns you less.'; },
+    why: function () { return [E('Customers may have learned to wait for offers, so promotions bring forward sales that would have happened anyway.', 'Compare sales in the weeks just before and after each promotion with normal weeks. If sales dip just before and after, people are waiting for the deal.', ['promo']),
+      E('The value of your regular offer may be less clear than it needs to be without a discount attached.', 'Compare how your full-price marketing describes the offer with what customers say they value. If it’s mostly about price, that’s probably why people wait for a discount.', ['creative', 'pricing'])]; },
     check: function () { return 'Compare how many customers bought at full price with how many bought only on promotion over the last three months.'; },
     action: function () { return 'Split last quarter’s sales into promotion and non-promotion periods using your sales or order records, and compare what each earned after discounts and fees. This helps you decide whether promotions add new customers or mostly move existing ones.'; },
     confirm: function () { return 'Sales split by promotion and full-price periods'; },
@@ -400,14 +400,14 @@
       return e; },
     promo: function (c) { return c.is('q9', 'low_margin', 'when_full', 'margin_falls', 'contribution_unclear', 'discount_margin'); },
     area: function (c) { if (!this.promo(c)) return 'whether your extra ' + c.o + ' are adding profit'; return c.b === 'C' && c.is('q9', 'when_full') ? 'when your promotions run compared with your busy periods' : 'what your promotions and extra sales earn after costs'; },
-    link: function () { return 'More sales that do not add profit can come from discount depth, fees, timing or product mix. Your answers do not yet show which.'; },
-    impact: function (c) { return 'Extra ' + c.o + ' only help if they add profit after discounts, fees and delivery.'; },
-    why: function (c) { if (!this.promo(c)) return [E('Newer customers or orders may be lower in value, or cost more to serve, than earlier ones.', 'Compare average order value and cost to serve for new customers with earlier ones. Lower value for new customers supports this.', ['targeting', 'pricing']),
-        E('Discounts, fees, returns or delivery costs may be rising alongside volume.', 'Put discounts, fees, returns and delivery costs as a share of sales for this quarter next to last quarter. A rising share supports this.', ['promo', 'delivery'])];
+    link: function () { return 'When sales go up and profit doesn’t, it’s usually discounts, fees, timing or what people are buying. Your answers don’t tell us which one yet.'; },
+    impact: function (c) { return 'Extra ' + c.o + ' are only worth having if there’s still profit left after discounts, fees and delivery.'; },
+    why: function (c) { if (!this.promo(c)) return [E('Newer customers or orders may be lower in value, or cost more to serve, than earlier ones.', 'Compare average order value and cost to serve for new customers with earlier ones. If newer customers spend less or cost more to serve, that’s where the margin is going.', ['targeting', 'pricing']),
+        E('Discounts, fees, returns or delivery costs may be rising alongside volume.', 'Put discounts, fees, returns and delivery costs as a share of sales for this quarter next to last quarter. If that share is climbing, it’s eating the growth.', ['promo', 'delivery'])];
       return c.b === 'C' ? [E('Promotions may run when you are already busy, discounting orders you would have had anyway.', 'Compare promotion orders in busy and quiet periods. Many promotion orders at peak times support this.', ['promo']),
-        E('Platform commission, delivery costs and the discount together may leave little from each extra order.', 'Work out what one typical promotion order earns after commission, delivery and discount. A small or negative figure confirms it.', ['promo', 'pricing'])] :
-      [E('Discounts, platform or trade fees and returns together may absorb most of the extra revenue.', 'For your last promotion, subtract discounts, fees and returns from the extra revenue it brought. Little left over confirms it.', ['promo', 'pricing']),
-        E('Growth may be coming from lower-value orders or customers.', 'Compare the average order value of new customers this quarter with last quarter. A clear drop supports this.', ['targeting', 'pricing'])]; },
+        E('Platform commission, delivery costs and the discount together may leave little from each extra order.', 'Work out what one typical promotion order earns after commission, delivery and discount. If it’s tiny or negative, the promotions aren’t paying for themselves.', ['promo', 'pricing'])] :
+      [E('Discounts, platform or trade fees and returns together may absorb most of the extra revenue.', 'For your last promotion, subtract discounts, fees and returns from the extra revenue it brought. If there’s little left, the promotion isn’t paying for itself.', ['promo', 'pricing']),
+        E('Growth may be coming from lower-value orders or customers.', 'Compare the average order value of new customers this quarter with last quarter. If it has clearly dropped, growth is coming from smaller orders.', ['targeting', 'pricing'])]; },
     check: function (c) { if (!this.promo(c)) return 'Compare the margin on ' + c.o + ' from the last three months with the three months before, after discounts, fees and returns.';
       return c.b === 'C' ? 'Compare promotion orders in busy and quiet periods, and review what each earned after discounts and platform fees.' : 'Review what each recent promotion or campaign earned after discounts, fees and returns, not just the sales it added.'; },
     action: function (c) { if (!this.promo(c)) return 'In your sales records, compare what each ' + SINGLE[c.b] + ' earned after discounts, fees and delivery this quarter and last quarter, split by channel. This tells you whether the drop comes from order value, costs or a particular channel.';
@@ -428,25 +428,25 @@
       return e.length ? e : null; },
     area: function (c) { return { A: 'stock and product choice', C: 'your capacity at the times customers want to come or order', D: 'whether the products you promote are available to buy',
       G: 'appointment availability', H: 'the wait until the next start date', I: 'stock availability where your marketing runs' }[c.b]; },
-    link: function () { return 'Your answers point more to an availability limit than to a lack of interest, though that still needs checking.'; },
-    impact: function (c) { return 'Marketing cannot turn interest into ' + c.o + ' if the product, slot or place is not available when people are ready, and more marketing may simply create more disappointed people.'; },
+    link: function () { return 'From what you’ve told us, this looks more like an availability problem than a lack of interest, though it’s worth checking.'; },
+    impact: function (c) { return 'Marketing can’t turn interest into ' + c.o + ' if there’s nothing available when people are ready, and more marketing may just mean more disappointed people.'; },
     why: function (c) { return {
       A: [E('Popular sizes or variants may sell out faster than you restock.', 'Check stock-out dates for your most-promoted products against your campaign dates. Overlaps support this.', ['capacity']),
         E('Your range may not match what the people you reach are looking for.', 'List the items shoppers ask for that you do not carry. Frequent requests support this.', ['targeting', 'capacity'])],
       C: [E('Staffing or kitchen capacity may cap how many orders you can take at peak times.', 'Compare orders and waiting times by hour with the staff on shift. Long waits when fully staffed support this.', ['capacity']),
-        E('Delivery radius or platform coverage may exclude people your marketing reaches.', 'Compare your delivery area with where your marketing reaches. A large mismatch supports this.', ['targeting', 'delivery'])],
+        E('Delivery radius or platform coverage may exclude people your marketing reaches.', 'Compare your delivery area with where your marketing reaches. If they don’t overlap much, you’re paying to reach people you can’t deliver to.', ['targeting', 'delivery'])],
       D: [E('Stock of promoted items may not be reaching the store in time.', 'Check when promoted items arrived in store against your campaign start dates. Late arrivals support this.', ['capacity']),
         E('Stock records may not match what is actually on the shelf.', 'Spot-check the shelves for five promoted items against your stock system. Mismatches support this.', ['capacity'])],
       G: [E('Practitioner hours may not match when clients want appointments.', 'Compare the times people ask for with the times slots are open. Many requests for unavailable times support this.', ['capacity']),
-        E('Slots may be held for existing clients, leaving little for new enquiries.', 'Check how many slots in the next two weeks are open to new clients. Very few supports this.', ['capacity'])],
-      H: [E('Intakes may be too far apart for people who want to start now.', 'Count people who wanted to start sooner than the next intake, and how many enrolled when it came. A big drop supports this.', ['capacity']),
-        E('There may be no interim option, such as a trial or waitlist class, to hold interest.', 'Check what people waiting for an intake hear from you. Nothing between enquiry and start date supports this.', ['retention', 'response'])],
+        E('Slots may be held for existing clients, leaving little for new enquiries.', 'Check how many slots in the next two weeks are open to new clients. If there are hardly any, new clients simply can’t get in.', ['capacity'])],
+      H: [E('Intakes may be too far apart for people who want to start now.', 'Count people who wanted to start sooner than the next intake, and how many enrolled when it came. If many didn’t, the wait is costing you.', ['capacity']),
+        E('There may be no interim option, such as a trial or waitlist class, to hold interest.', 'Check what people waiting for an intake hear from you. If they hear nothing until the start date, that gap is where you lose them.', ['retention', 'response'])],
       I: [E('Retailer coverage may be patchy in the areas you advertise.', 'Map stocked stores against your campaign areas. Gaps support this.', ['stockists']),
         E('Stock may sell out or not be replenished during campaigns.', 'Ask retailers for stock levels during your last campaign. Stock-outs support this.', ['capacity', 'stockists'])] }[c.b]; },
     check: function (c) { return { A: 'Compare lost-sale feedback with your stock records for the products you promote most.', C: 'Compare demand by hour or day with the capacity and staff you had at those times.',
       D: 'Check whether the products in your last campaign were in stock in-store for its full duration.', G: 'Compare when enquiries arrive with when suitable slots are actually open.',
       H: 'Count how many interested people were waiting for a start date and how many enrolled when it came.', I: 'Check stock in stores near where your campaigns ran, during the campaign period.' }[c.b]; },
-    action: function (c) { return this.check(c) + ' If availability is the limit, fixing it comes before adding marketing, and some of this may be an operational decision rather than a marketing one.'; },
+    action: function (c) { return this.check(c) + ' If availability is what’s holding you back, fix that before adding marketing. Some of it may be more of an operations call than a marketing one.'; },
     confirm: function (c) { return c.b === 'G' ? 'Your booking calendar and enquiry times' : c.b === 'H' ? 'Your waitlist and intake records' : 'Stock or capacity records'; },
     record: function (c) { return { A: 'Stock-out history for promoted products', C: 'Orders and capacity by hour or day', D: 'Store stock records for promoted products', G: 'Slot availability next to enquiry times',
       H: 'Intake dates, waitlists and enrolment timing', I: 'Retailer sales and stock availability by store' }[c.b]; } });
@@ -458,12 +458,12 @@
       if (!c.is('q7', 'where_to_buy') && !c.is('q9', 'where')) return null;
       return e; },
     area: function () { return 'whether interested shoppers can find where to buy'; },
-    link: function () { return 'Interest that cannot find a shelf does not become a purchase, however good the marketing is.'; },
-    impact: function (c) { return 'An interested shopper who cannot find the product is demand you may have paid to create but cannot turn into ' + c.o + '.'; },
+    link: function () { return 'If people can’t find it on a shelf, they can’t buy it, however good the marketing is.'; },
+    impact: function (c) { return 'Every interested shopper who can’t find the product is demand you may have paid for and then lost.'; },
     why: function () { return [E('Your marketing may run in areas where few stores carry the product.', 'Map stockists against the areas your campaigns target. Large uncovered areas support this.', ['stockists', 'targeting']),
-      E('Stockist information may be hard to find in your ads, social pages or packaging.', 'Look at your ads and profiles as a shopper would and see how quickly you can find where to buy. If it is not obvious, this fits.', ['stockists', 'creative'])]; },
-    check: function () { return 'Align campaign locations with stocked retailers, and check that shoppers can see where to buy from your ads and profiles.'; },
-    action: function () { return 'Map your current stockists against the areas your campaigns target. If there are gaps, narrow campaigns to covered areas or make the nearest stockist easy to find before spending more.'; },
+      E('Stockist information may be hard to find in your ads, social pages or packaging.', 'Look at your ads and profiles as a shopper would and see how quickly you can find where to buy. If it takes more than a few seconds, people are giving up.', ['stockists', 'creative'])]; },
+    check: function () { return 'Make sure your campaigns run where the product is actually stocked, and that people can see where to buy it from your ads and profiles.'; },
+    action: function () { return 'Map your stockists against the areas your campaigns target. Where there are gaps, either pull the campaigns back to covered areas or make the nearest stockist easy to find, before you spend more.'; },
     confirm: function () { return 'Stockist coverage compared with campaign areas'; },
     record: function () { return 'Stockist lists by area next to campaign targeting'; } });
 
@@ -478,20 +478,20 @@
       return e.length ? e : null; },
     area: function (c) { return { E: 'what your listings make clear before someone enquires', F: 'how specifically your marketing explains who you help and the results you get',
       I: 'whether shoppers understand when and why to choose your product', B: 'what people expect before they sign up', G: 'what people expect before they enquire', C: 'what people can see about your menu, prices and delivery terms before they order' }[c.b] || 'what your marketing makes clear before someone gets in touch'; },
-    link: function () { return 'When the message leaves gaps, people may fill them with their own assumptions, which may not match what you offer.'; },
-    impact: function (c) { return 'Unclear messages can attract people who drop out later, which can raise the cost of each of your ' + c.o + '.'; },
+    link: function () { return 'When your message leaves gaps, people fill them in themselves, and what they imagine may not be what you actually offer.'; },
+    impact: function (c) { return 'An unclear message pulls in people who drop out later, and you pay for every one of them.'; },
     why: function (c) {
       if (c.b === 'E') return [E('Listings may leave out price range, location or key details, so budget or location mismatches only surface after the enquiry.', 'Check your top listings for price range, location and key details, then note how many recent enquiries dropped out over those points. Many such drop-outs support this.', ['pages', 'creative']),
         E('Lifestyle or investment messaging may draw interest from people outside your buyer profile.', 'Compare enquiries from lifestyle-led ads with enquiries from detail-led ads. More budget or location mismatches from the lifestyle ads support this.', ['creative', 'targeting'])];
-      if (c.b === 'F') return [E('Broad claims may make you sound like many other providers, so enquiries arrive without a reason to choose you.', 'Put your main page next to two competitors’ pages and ask whether a stranger could tell you apart. If not, this fits.', ['creative', 'website']),
-        E('Evidence of results for a specific type of client may be missing.', 'Check whether your marketing shows a result for a client like your target buyer. If it does not, this fits.', ['proof'])];
+      if (c.b === 'F') return [E('Broad claims may make you sound like many other providers, so enquiries arrive without a reason to choose you.', 'Put your main page next to two competitors’ pages and ask whether a stranger could tell you apart. If they couldn’t, your message is too generic.', ['creative', 'website']),
+        E('Evidence of results for a specific type of client may be missing.', 'Check whether your marketing shows a result for a client like your target buyer. If there isn’t one, buyers have nothing to go on.', ['proof'])];
       if (c.b === 'I') return [E('The product’s use or occasion may not be obvious from the pack or ads.', 'Ask five people who do not know the product what it is for after seeing the pack or an ad. Mixed answers support this.', ['creative', 'pages']),
-        E('Shoppers may not see a clear difference from alternatives on the shelf.', 'Photograph your product next to its shelf neighbours and note what makes it different at a glance. If nothing stands out, this fits.', ['pages', 'creative'])];
+        E('Shoppers may not see a clear difference from alternatives on the shelf.', 'Photograph your product next to its shelf neighbours and note what makes it different at a glance. If nothing jumps out, shoppers won’t see a reason to pick yours.', ['pages', 'creative'])];
       return [E('Your marketing may promise or imply something the product or service does not deliver.', 'Note what people who dropped out expected, and compare it with what your main ads say. Repeated gaps support this.', ['creative']),
-        E('Key details people need to decide may only appear after they get in touch.', 'List the questions people ask in their first message. If the answers are not in your ads or pages, this fits.', ['website', 'pages', 'creative'])]; },
-    check: function (c) { return c.b === 'E' ? 'Review listing clarity, then compare how many budget-matched enquiries each source produces.' :
+        E('Key details people need to decide may only appear after they get in touch.', 'List the questions people ask in their first message. If your ads and pages don’t answer them, people are enquiring just to find out the basics.', ['website', 'pages', 'creative'])]; },
+    check: function (c) { return c.b === 'E' ? 'Check your listings are clear on price and location, then see which source brings in the most enquiries that actually fit the budget.' :
       'Put your three main ads or pages side by side and check whether each states who it is for, what it does and what it costs or requires.'; },
-    action: function (c) { return 'Take the last 20 people who dropped out after first contact and note what they expected that did not match. Compare that with what your top ads or listings say. This tells you which detail to make clearer first.'; },
+    action: function (c) { return 'Go through the last 20 people who dropped out after first contact and note what they expected that you don’t offer. Then put that next to what your main ads or listings say, and you’ll see which detail to make clearer first.'; },
     confirm: function () { return 'Notes on why early enquiries dropped out'; },
     record: function () { return 'Reasons early enquiries dropped out, next to the ads or listings they came from'; } });
 
@@ -506,16 +506,16 @@
       if (c.b === 'B') e = c.any('q9', ['mismatch']).concat(c.any('q7', ['qualification']));
       return e.length ? e : null; },
     area: function (c) { return 'how well your enquiries match what you offer'; },
-    link: function () { return 'A large share of mismatched enquiries can mean most of the filtering happens after people get in touch rather than before.'; },
-    impact: function (c) { return 'Mismatched enquiries take follow-up time and can make each of your ' + c.o + ' more expensive, even when enquiry volume looks healthy.'; },
+    link: function () { return 'When a lot of enquiries don’t fit, it usually means you’re doing the filtering after people get in touch, when it could happen before.'; },
+    impact: function (c) { return 'Enquiries that don’t fit still eat up follow-up time, so each of your ' + c.o + ' ends up costing more, even when the enquiry numbers look fine.'; },
     why: function (c) {
-      if (c.b === 'H' && c.is('q9', 'not_decider')) return [E('Your marketing may reach learners, while parents, employers or other payers make the decision.', 'Note who made the payment decision for your last 20 enrolments and who first enquired. If they are often different people, this fits.', ['targeting', 'creative']),
-        E('The information the payer needs, such as outcomes and fees, may be harder to find.', 'Check whether fees, schedule and outcomes are on the pages payers see. If they are missing or hard to find, this fits.', ['website', 'qualify'])];
-      return [E('Targeting or listings may not filter by budget, location, need or timing before someone enquires.', 'Mark your last 30 enquiries as good or poor fit and note why. If most poor fits share one reason, filtering on that point is the gap.', ['qualify', 'targeting']),
-        E('Counting every enquiry equally may make channels that produce poor-fit enquiries look better than they are.', 'Compare good-fit enquiries by source instead of all enquiries. If the ranking of your channels changes, this explanation holds.', ['tracking'])]; },
-    check: function (c) { return c.b === 'E' ? 'Compare cost per budget-matched enquiry across your sources, not cost per enquiry.' :
+      if (c.b === 'H' && c.is('q9', 'not_decider')) return [E('Your marketing may reach learners, while parents, employers or other payers make the decision.', 'Note who made the payment decision for your last 20 enrolments and who first enquired. If it’s often someone else paying, your marketing is talking to the wrong person.', ['targeting', 'creative']),
+        E('The information the payer needs, such as outcomes and fees, may be harder to find.', 'Check whether fees, schedule and outcomes are on the pages payers see. If they’re missing or buried, the payer has nothing to say yes to.', ['website', 'qualify'])];
+      return [E('Targeting or listings may not filter by budget, location, need or timing before someone enquires.', 'Mark your last 30 enquiries as good or poor fit and note why. If most poor fits fail for the same reason, that’s what to filter for upfront.', ['qualify', 'targeting']),
+        E('Counting every enquiry equally may make channels that produce poor-fit enquiries look better than they are.', 'Count good-fit enquiries by source, instead of all enquiries. If the ranking of your channels changes, you’ve been judging them on the wrong number.', ['tracking'])]; },
+    check: function (c) { return c.b === 'E' ? 'For each source, work out what you pay per enquiry that actually fits the budget, rather than per enquiry overall.' :
       'Mark your last 30 enquiries as good fit or poor fit using a simple definition, and compare the share by source.'; },
-    action: function (c) { return 'Agree a simple definition of a qualified enquiry (for example budget, need and timing confirmed), then mark the last month’s enquiries against it in your enquiry records. Comparing qualified enquiries by source tells you which channels deserve more time or budget.'; },
+    action: function (c) { return 'Agree on a simple definition of a good enquiry (budget, need and timing confirmed, say), then go through last month’s enquiries and mark each one. Once you compare good enquiries by source, you’ll see which channels deserve more time or money.'; },
     confirm: function () { return 'Enquiries marked against a qualification definition'; },
     record: function () { return 'Lost-enquiry reasons and qualification notes by source'; } });
 
@@ -530,14 +530,14 @@
       return e.length ? e : null; },
     area: function (c) { return { E: 'what happens in the first hours after someone enquires about a property', F: 'what happens between an enquiry and a first conversation',
       G: 'how quickly an enquiry turns into a confirmed booking', H: 'what happens after an enquiry or trial', A: 'how message enquiries are handled' }[c.b] || 'what happens after someone enquires'; },
-    link: function () { return 'People who have already enquired can still be lost through slow or unclear next steps.'; },
-    impact: function (c) { return 'Enquiries have already cost money to generate, so delays and gaps here can reduce ' + c.o + ' from spending you have already made.'; },
+    link: function () { return 'People who’ve already enquired can still slip away if the next step is slow or unclear.'; },
+    impact: function (c) { return 'You’ve already paid for these enquiries, so anything lost here is money already spent with nothing to show for it.'; },
     why: function (c) { if (c.is('q9', 'unresponsive')) return [E('Prospects may have enquired early in their research and are not ready yet.', 'Note when unresponsive enquirers said they planned to decide, or ask a few. Long timelines support this.', ['qualify']),
-        E('Follow-up messages may not give a reason to reply, such as a specific viewing slot or answer to their question.', 'Read your last ten follow-up messages. If they do not offer a specific next step, this fits.', ['response'])];
-      return [E('Response times may vary with staff availability, so some enquiries go cold before anyone replies.', 'Measure the time to first personal reply for your last 30 enquiries and compare how many fast and slow ones progressed. Slower ones progressing less supports this.', ['response']),
-        E('The next step may be unclear or take several messages to arrange.', 'Count how many messages it took to arrange the next step for your last ten enquiries. A lot of back-and-forth supports this.', ['response', 'reminders'])]; },
-    check: function (c) { return 'Measure the time from enquiry to first personal response for your last 30 enquiries, and compare how many of the fast and slow ones progressed.'; },
-    action: function (c) { return 'Pull your last 30 enquiries from your inbox, WhatsApp or CRM and note the response time and whether each reached the next step. If slower replies progress noticeably less often in your own records, fix response handling before buying more enquiries.'; },
+        E('Follow-up messages may not give a reason to reply, such as a specific viewing slot or answer to their question.', 'Read your last ten follow-up messages. If they don’t offer a clear next step, people have no reason to reply.', ['response'])];
+      return [E('Response times may vary with staff availability, so some enquiries go cold before anyone replies.', 'Note how long your last 30 enquiries waited for a personal reply, and how many of the quick and slow ones went anywhere. If the slow ones go cold more often, speed is costing you clients.', ['response']),
+        E('The next step may be unclear or take several messages to arrange.', 'Count how many messages it took to arrange the next step for your last ten enquiries. If it takes a lot of back-and-forth, the process itself is losing people.', ['response', 'reminders'])]; },
+    check: function (c) { return 'For your last 30 enquiries, note how long it took someone to reply personally, and compare how many of the quick and slow ones went anywhere.'; },
+    action: function (c) { return 'Pull your last 30 enquiries from your inbox, WhatsApp or CRM, and note how quickly each got a reply and whether it went anywhere. If the slow replies go cold noticeably more often, speed up your replies before you pay for more enquiries.'; },
     confirm: function () { return 'Enquiry response times and outcomes'; },
     record: function () { return 'Enquiry timestamps, first-response times and what happened next'; } });
 
@@ -551,12 +551,12 @@
       return e.length ? e : null; },
     noun: function (c) { return { E: 'viewings', F: 'meetings', G: 'appointments', H: 'trials or consultations', C: c.sub === 'catering' ? 'catering bookings' : 'reservations', B: 'demos', D: 'click-and-collect orders' }[c.b] || 'bookings'; },
     area: function (c) { return 'how many booked ' + this.noun(c) + ' actually go ahead'; },
-    link: function () { return 'A booking shows interest, but it only counts once it goes ahead.'; },
-    impact: function (c) { return 'Every booking that does not go ahead is a step you paid to reach, and bookings on their own can overstate how well marketing is working.'; },
-    why: function (c) { if (c.b === 'D') return [E('Orders may not be ready or may not be confirmed clearly, so people do not come.', 'Check how many uncollected orders received a clear ready-for-pickup message on time. Few supports this.', ['checkout', 'reminders']),
+    link: function () { return 'A booking shows interest, but it only counts once the person actually turns up.'; },
+    impact: function (c) { return 'Every booking that doesn’t go ahead is something you paid to get, and counting bookings alone can make your marketing look better than it is.'; },
+    why: function (c) { if (c.b === 'D') return [E('Orders may not be ready or may not be confirmed clearly, so people do not come.', 'Check how many uncollected orders received a clear ready-for-pickup message on time. If many didn’t get one, that’s probably why they aren’t coming in.', ['checkout', 'reminders']),
         E('Pickup times or location may be inconvenient.', 'Ask a few customers who did not collect why. Timing or location reasons support this.', ['capacity'])];
-      return [E('Reminders or confirmations may be missing, late or unclear about time and location.', 'Compare attendance for bookings that received a clear reminder with those that did not. Better attendance with reminders supports this.', ['reminders']),
-        E('A long gap between booking and the date may let interest fade or plans change.', 'Compare attendance for bookings made within a few days with those made further ahead. Lower attendance for longer gaps supports this.', ['capacity', 'reminders'])]; },
+      return [E('Reminders or confirmations may be missing, late or unclear about time and location.', 'Compare attendance for bookings that received a clear reminder with those that did not. If reminded bookings turn up more often, the fix is making sure everyone gets one.', ['reminders']),
+        E('A long gap between booking and the date may let interest fade or plans change.', 'Compare attendance for bookings made within a few days with those made further ahead. If far-off bookings no-show more, the wait is the problem.', ['capacity', 'reminders'])]; },
     check: function (c) { return 'Compare attendance for ' + this.noun(c) + ' booked within a few days with those booked further ahead, and check what reminder each received.'; },
     action: function (c) { return 'Using your booking records for the last two months, compare bookings with what actually went ahead, split by how far ahead they were booked and whether a reminder was sent. This tells you whether timing or reminders deserve attention first.'; },
     confirm: function () { return 'Booking and attendance records'; },
@@ -575,22 +575,22 @@
       return e.length ? e : null; },
     area: function (c) { return { F: 'how your proposals connect your work to the client’s goal', E: 'why viewings or proposals do not become agreements',
       H: 'what happens between a trial or consultation and a paid enrolment', B: 'what users see before they are asked to pay' }[c.b] || 'what helps people commit'; },
-    link: function (c) { return c.b === 'F' && c.is('q8', 'fit') ? 'Your enquiries appear to fit, so the gap may be more about how the value is shown than who you attract.' : 'People are getting close to a decision, so it is worth asking what they need to feel confident enough to commit.'; },
-    impact: function (c) { return 'These prospects have taken more time and spending to reach, so each one lost here costs more than one lost earlier.'; },
+    link: function (c) { return c.b === 'F' && c.is('q8', 'fit') ? 'Your enquiries seem to fit, so the gap may be in how you show your value, more than who you attract.' : 'These people are close to deciding, so the question is what they still need before they feel sure enough to say yes.'; },
+    impact: function (c) { return 'You’ve put real time and money into getting these people this far, so each one you lose here hurts more than one lost earlier.'; },
     why: function (c) {
-      if (c.b === 'B') return [E('Users may not reach the part of the product that shows its value before the paywall or trial ends.', 'Check what share of users who reach the paywall or trial end have completed your key value action. A low share supports this.', ['onboarding']),
+      if (c.b === 'B') return [E('Users may not reach the part of the product that shows its value before the paywall or trial ends.', 'Check what share of users who reach the paywall or trial end have completed your key value action. If most haven’t, they’re hitting the paywall before they see the value.', ['onboarding']),
         E('The difference between free and paid may be unclear, or the free version may already meet their need.', 'Compare how free users who never upgrade use the product with those who do. If non-upgraders use it fully, the free plan may already be enough.', ['pricing'])];
       if (c.b === 'E') return [E('The property, price or financing may not fit the buyer’s situation once they see it in person.', 'Record the stated reason for each lost prospect after a viewing for a month. Price, fit or financing reasons support this.', ['qualify', 'pages']),
-        E('Co-buyers or decision-makers may not have been involved early enough.', 'Check how many lost prospects viewed without their co-buyer or decision-maker. A high share supports this.', ['qualify', 'proposals'])];
-      if (c.b === 'H') return [E('The recommendation after a trial may be general rather than tied to the person’s goal and level.', 'Compare enrolment for people who received a specific recommendation after their trial with those who received a general offer. Higher enrolment for specific ones supports this.', ['proposals']),
+        E('Co-buyers or decision-makers may not have been involved early enough.', 'Check how many lost prospects viewed without their co-buyer or decision-maker. If most did, you need the decision-maker involved earlier.', ['qualify', 'proposals'])];
+      if (c.b === 'H') return [E('The recommendation after a trial may be general rather than tied to the person’s goal and level.', 'Compare enrolment for people who received a specific recommendation after their trial with those who received a general offer. If specific ones convert better, make every recommendation specific.', ['proposals']),
         E('The payer may not have enough information on outcomes, schedule or fees to agree.', 'Ask a few people who did not enrol whether the payer had the details they needed. Missing details support this.', ['proposals', 'website'])];
-      return [E('Proposals may describe the work without connecting it to the buyer’s goal or expected return.', 'Compare won and lost proposals from the last six months. If the won ones tie the scope to a business result and the lost ones do not, this fits.', ['proposals']),
-        E('The buyer may lack proof from similar clients to feel confident.', 'Check whether lost prospects saw a relevant example or case study. If they rarely did, this fits.', ['proof'])]; },
+      return [E('Proposals may describe the work without connecting it to the buyer’s goal or expected return.', 'Compare won and lost proposals from the last six months. If the ones you won talk about the client’s business result and the lost ones don’t, that’s the difference.', ['proposals']),
+        E('The buyer may lack proof from similar clients to feel confident.', 'Check whether lost prospects saw a relevant example or case study. If they rarely did, they had nothing to reassure them.', ['proof'])]; },
     check: function (c) { return c.b === 'F' ? 'Compare won and lost proposals from the last six months and check whether the won ones connected scope to a specific business result.' :
       c.b === 'H' ? 'Compare enrolment rates for people who received a specific recommendation after their trial with those who received a general offer.' :
       c.b === 'B' ? 'Check what share of users who reach your paywall or trial end have completed the action that best shows the product’s value.' :
       'Record the stated reason for every lost prospect after a viewing or proposal for the next month.'; },
-    action: function (c) { return this.check(c) + ' This separates a value-communication gap from a fit or pricing problem. Price objections alone are not a reason to discount.'; },
+    action: function (c) { return this.check(c) + ' That tells you whether people aren’t seeing the value or whether it’s really about fit or price. And price objections on their own aren’t a good reason to discount.'; },
     confirm: function () { return 'Won and lost reasons'; },
     record: function (c) { return c.b === 'H' ? 'Trial attendance, follow-up notes and enrolment records' : c.b === 'B' ? 'Product usage before paywall or trial end, by converted and non-converted users' : 'Won and lost proposal or deal notes with stated reasons'; } });
 
@@ -599,14 +599,14 @@
     when: function (c) { var e = c.any('q7', ['finance', 'procurement']).concat(c.any('q9', ['paperwork', 'price_finance', 'approval']));
       return e.length ? e : null; },
     area: function (c) { return c.b === 'E' ? 'delays during finance, checks or documentation' : 'delays during approval or procurement'; },
-    link: function () { return 'Delays at this stage can come from process and timing as much as from marketing.'; },
-    impact: function (c) { return 'Deals that stall late can make marketing look weaker than it is, because the ' + c.o + ' arrive months after the enquiry.'; },
-    why: function (c) { return c.b === 'E' ? [E('Buyers may reach reservation before their financing is confirmed.', 'Check at what stage financing was confirmed for reservations that fell through. Late or no confirmation supports this.', ['qualify']),
-        E('Documentation steps may be slow or unclear to buyers.', 'Time each documentation step for recent deals. One step taking much longer than the others supports this.', ['proposals', 'response'])] :
-      [E('Buyers may not have budget approval or the right decision-makers involved.', 'Check when budget and decision-makers were confirmed on stalled deals. Late confirmation supports this.', ['qualify', 'proposals']),
-        E('Procurement requirements may only surface late in the process.', 'List when procurement steps first came up on recent deals. If they appeared after the proposal, this fits.', ['proposals'])]; },
+    link: function () { return 'Delays this late are often about process and timing as much as marketing.'; },
+    impact: function (c) { return 'Deals that stall late can make your marketing look worse than it is, because the ' + c.o + ' show up months after the enquiry.'; },
+    why: function (c) { return c.b === 'E' ? [E('Buyers may reach reservation before their financing is confirmed.', 'Check at what stage financing was confirmed for reservations that fell through. If it was confirmed late or not at all, financing is where deals fall over.', ['qualify']),
+        E('Documentation steps may be slow or unclear to buyers.', 'Time each documentation step for recent deals. If one step drags far longer than the rest, start there.', ['proposals', 'response'])] :
+      [E('Buyers may not have budget approval or the right decision-makers involved.', 'Check when budget and decision-makers were confirmed on stalled deals. If they were confirmed late, deals are stalling because the buyer wasn’t ready.', ['qualify', 'proposals']),
+        E('Procurement requirements may only surface late in the process.', 'List when procurement steps first came up on recent deals. If they only came up after the proposal, that’s what’s stalling things.', ['proposals'])]; },
     check: function (c) { return c.b === 'E' ? 'Check at what point financing readiness is confirmed, and how many reservations fall through afterwards.' : 'Check at what stage you confirm budget, decision-makers and procurement steps.'; },
-    action: function (c) { return this.check(c) + ' Targeting changes alone are unlikely to fix this stage, so it helps to judge marketing on earlier outcomes while you look at the process.'; },
+    action: function (c) { return this.check(c) + ' Tweaking your targeting probably won’t fix this stage, so judge your marketing on earlier results while you sort out the process.'; },
     confirm: function () { return 'Stage-by-stage deal records'; },
     record: function (c) { return c.b === 'E' ? 'Reservations and what happened to each through finance and completion' : 'Deal stages with dates and reasons for delay'; } });
 
@@ -619,10 +619,10 @@
       if (c.b === 'H' && c.sub === 'self_paced') e = c.any('q7', ['course_start']);
       return e.length ? e : null; },
     area: function (c) { return c.b === 'H' ? 'whether buyers start the course' : 'whether new users reach a useful first outcome'; },
-    link: function () { return 'People are signing up, so part of the gap may sit between signup and the first moment the product proves useful.'; },
-    impact: function (c) { return 'Users who never reach value are less likely to become ' + c.o + ', so more signups may not help much until this step works.'; },
-    why: function () { return [E('Setup may ask for too much effort or information before anything useful happens.', 'Count the steps between signup and the first useful outcome, and see where users stop. A big drop at one setup step supports this.', ['onboarding']),
-      E('The useful first outcome may not be defined, so onboarding is not designed around reaching it.', 'Check whether your team can name one early action that predicts paying or staying. If not, this fits.', ['onboarding', 'tracking'])]; },
+    link: function () { return 'People are signing up, so the gap may be between signing up and the first moment the product actually helps them.'; },
+    impact: function (c) { return 'People who never get to that moment are much less likely to become ' + c.o + ', so more signups won’t help much until this part works.'; },
+    why: function () { return [E('Setup may ask for too much effort or information before anything useful happens.', 'Count the steps between signup and the first useful outcome, and see where users stop. If lots of people stop at one setup step, that step is the problem.', ['onboarding']),
+      E('The useful first outcome may not be defined, so onboarding is not designed around reaching it.', 'Check whether your team can name one early action that predicts paying or staying. If nobody can, onboarding has nothing to aim at.', ['onboarding', 'tracking'])]; },
     check: function (c) { return c.is('q8', 'undefined', 'logins', 'setup', 'feedback_only') ? 'Define one useful outcome a new user should reach, then compare how often users from each channel reach it.' : 'Compare how often users from each channel reach your useful first outcome in their first week.'; },
     action: function (c) { return 'Define one useful first outcome (not a login) and measure what share of last month’s new users reached it, by acquisition channel, in your product analytics. This tells you whether to fix onboarding or change who you acquire before adding more installs.'; },
     confirm: function () { return 'Product analytics on the first useful action'; },
@@ -641,14 +641,14 @@
       return e; },
     area: function (c) { return { B: 'why users stop using the product', F: 'why clients do not renew', H: c.goal === 'attend' ? 'why people stop attending' : 'what keeps people participating',
       I: 'why shoppers do not buy again', A: 'why customers do not buy again', C: 'why customers do not come back', G: 'the experience after a first visit', D: 'why shoppers do not return' }[c.b] || 'why customers do not return'; },
-    link: function (c) { return c.b === 'H' ? 'Stopping partway is different from finishing a programme, which is a good outcome in itself.' : 'What happens after the first purchase or visit may matter more here than how people were acquired.'; },
-    impact: function (c) { return 'When customers leave early, you have to keep paying to replace them, which can make growth in ' + c.o + ' more expensive.'; },
-    why: function (c) { if (c.b === 'B') return [E('Users may try the product without building it into a regular routine.', 'Compare how often retained and churned users used the product in their first month. Much lower early use among churned users supports this.', ['onboarding', 'retention']),
+    link: function (c) { return c.b === 'H' ? 'Dropping out partway is different from finishing, which is a good result in itself.' : 'What happens after the first purchase or visit may matter more here than how you found these people.'; },
+    impact: function (c) { return 'When customers leave early, you keep paying to replace them, and growth gets more expensive every month.'; },
+    why: function (c) { if (c.b === 'B') return [E('Users may try the product without building it into a regular routine.', 'Compare how often retained and churned users used the product in their first month. If the people who left barely used it early on, the habit never formed.', ['onboarding', 'retention']),
         E('Price, missing features or reliability may outweigh the value they get.', 'Read cancellation reasons from the last three months. Price, feature or reliability reasons support this.', ['pricing'])];
       if (c.b === 'H') return [E('Schedules, level or workload may not suit people once they start.', 'Ask people who stopped what made it hard to continue. Schedule or level reasons support this.', ['capacity']),
-        E('People may not see their progress, so the value is less visible over time.', 'Check whether members receive any progress update. If they do not, and people who left mention not seeing results, this fits.', ['retention'])];
+        E('People may not see their progress, so the value is less visible over time.', 'Check whether members receive any progress update. If they don’t, and people who left say they didn’t see results, that’s likely why.', ['retention'])];
       return [E('The experience or product may not consistently match what first brought people in.', 'Compare the first experience of customers who returned with those who did not. Worse first experiences among non-returners support this.', ['staff', 'pages', 'creative']),
-        E('There may be no timely, relevant reason for customers to return.', 'Check what past customers hear from you after their first purchase or visit. Little or generic contact supports this.', ['retention'])]; },
+        E('There may be no timely, relevant reason for customers to return.', 'Check what past customers hear from you after their first purchase or visit. If it’s little or generic, they have no reason to come back.', ['retention'])]; },
     check: function (c) { return c.b === 'B' ? 'Compare the first-month behaviour of users who stayed with those who left.' :
       'Compare a group of customers who returned with a group who did not, and note what differed in their first experience.'; },
     action: function (c) { return 'Take 20 customers who came back and 20 who did not from your customer or booking records and compare their first experience, product and timing. This shows whether to focus on the experience itself or on follow-up.'; },
@@ -662,15 +662,15 @@
       if (c.b === 'H' && c.is('q9', 'undefined')) e = c.any('q9', ['undefined']);
       return e.length ? e : null; },
     area: function (c) { return c.b === 'H' ? 'what you suggest as a suitable next step after a programme' : c.b === 'G' ? 'how appropriate follow-up visits are arranged' : 'how you stay in touch with past customers'; },
-    link: function () { return 'Without a relevant reason or reminder to return, some satisfied customers may not come back.'; },
-    impact: function (c) { return 'Customers who do not return have to be replaced with new ones, so gaps here can make each of your ' + c.o + ' more expensive.'; },
+    link: function () { return 'Without a good reason or a nudge at the right time, even happy customers often don’t come back.'; },
+    impact: function (c) { return 'Every customer who doesn’t come back has to be replaced with a new one, and new ones cost more to win.'; },
     why: function (c) { if (c.b === 'G') return [E('Follow-up may depend on individual staff rather than a routine.', 'Compare how often a next visit was booked across practitioners. Big differences support this.', ['retention', 'staff']),
-        E('People may intend to return but have no easy way to book the next visit at the right time.', 'Check whether clients are offered a next booking or a reminder when a return is due. If not, this fits.', ['reminders', 'retention'])];
-      return [E('You may not be able to recognise or contact past customers.', 'Count how many of last quarter’s customers you have contact details for. A low share supports this.', ['retention', 'tracking']),
-        E('Follow-ups may be general offers rather than tied to what the person bought or needs next.', 'Read your last few follow-up messages. If they are the same for everyone, this fits.', ['retention'])]; },
-    check: function (c) { return c.b === 'G' ? 'Check how many clients for whom a further visit was clinically or practically appropriate actually had one booked.' :
+        E('People may intend to return but have no easy way to book the next visit at the right time.', 'Check whether clients are offered a next booking or a reminder when a return is due. If they aren’t, people mean to come back and simply forget.', ['reminders', 'retention'])];
+      return [E('You may not be able to recognise or contact past customers.', 'Count how many of last quarter’s customers you have contact details for. If it’s a small share, you can’t bring most of them back.', ['retention', 'tracking']),
+        E('Follow-ups may be general offers rather than tied to what the person bought or needs next.', 'Read your last few follow-up messages. If everyone gets the same message, it probably feels like spam.', ['retention'])]; },
+    check: function (c) { return c.b === 'G' ? 'Of the clients who should have come back, check how many actually had their next visit booked.' :
       'Check how many past customers you can contact, and what share received a relevant follow-up after their first purchase.'; },
-    action: function (c) { return c.b === 'G' ? 'For clients seen in the last three months where a further visit was appropriate, check in your booking system whether it was booked before they left. This tells you whether the gap is in-clinic process or later reminders.' :
+    action: function (c) { return c.b === 'G' ? 'For clients from the last three months who should have come back, check your booking system to see whether the next visit was booked before they left. That shows whether the gap is at the front desk or in the reminders afterwards.' :
       (c.is('q5', 'crm', 'lifecycle') ? 'You already use email, SMS or WhatsApp, so check what share of last quarter’s customers are on that list and what each one received after their first purchase. This tells you whether the gap is reaching past customers or what you send them.' : 'Count how many of last quarter’s customers you can recognise and contact through your order, booking or loyalty records, and how many heard from you after their first purchase. This tells you whether the gap is capturing contacts or using them.'); },
     confirm: function () { return 'Records of past customers and follow-ups sent'; },
     record: function () { return 'Past-customer contact records and follow-up history'; } });
@@ -680,10 +680,10 @@
     when: function (c) { var e = c.any('q9', ['low_aov', 'buy_once', 'small_contracts']);   // not knowing the figures is a measurement gap, not evidence of weak unit economics
       return e.length ? e : null; },
     area: function (c) { return 'what each ' + SINGLE[c.b] + ' costs to win compared with what it earns'; },
-    link: function () { return 'Cost problems can come from what each customer is worth, not only from what it costs to reach them.'; },
-    impact: function (c) { return 'If each ' + SINGLE[c.b] + ' earns less than it costs to win, more marketing makes the problem bigger.'; },
-    why: function (c) { return [E('Order or contract values may be too small to cover acquisition costs on the first purchase.', 'Compare cost per completed ' + SINGLE[c.b] + ' with the margin on a typical first purchase. If the cost is higher, this is confirmed for the first purchase.', ['pricing', 'promo']),
-      E('Customers may not return often enough to recover the cost over time.', 'Check what share of customers from six months ago have bought again. A low share supports this.', ['retention'])]; },
+    link: function () { return 'Sometimes the cost problem is what each customer is worth to you, and only partly what it costs to reach them.'; },
+    impact: function (c) { return 'If each ' + SINGLE[c.b] + ' earns less than it costs to win, more marketing just makes the hole deeper.'; },
+    why: function (c) { return [E('Order or contract values may be too small to cover acquisition costs on the first purchase.', 'Compare cost per completed ' + SINGLE[c.b] + ' with the margin on a typical first purchase. If it costs more to win them than the first order makes, you’re losing money on every first sale.', ['pricing', 'promo']),
+      E('Customers may not return often enough to recover the cost over time.', 'Check what share of customers from six months ago have bought again. If very few have, one purchase isn’t covering what it cost to win them.', ['retention'])]; },
     check: function (c) { return 'Work out cost per completed ' + SINGLE[c.b] + ' for your main channel, and compare it with the margin from a typical first purchase and any repeat purchases.'; },
     action: function (c) { return 'For last month, divide spend on your main channel by the completed ' + c.o + ' it produced, using order or sales records rather than platform-reported conversions. Comparing that with first-purchase margin shows whether to work on order value, repeat buying or acquisition cost.'; },
     confirm: function () { return 'Spend and completed-sale records by channel'; },
@@ -695,12 +695,12 @@
       if (c.b === 'A') e = e.concat(c.any('q9', ['few_products']).filter(function () { return !c.is('q7', 'before_cart'); }));
       return e.length ? e : null; },
     area: function () { return 'the specific product, source, store or time where results drop'; },
-    link: function () { return 'A drop concentrated in one place is easier to diagnose than one spread across the business.'; },
-    impact: function (c) { return 'Improving one weak area could lift overall ' + c.o + ' without changing everything else.'; },
-    why: function () { return [E('Something specific to that product, source or location may differ, such as stock, staff, pricing or audience.', 'Put the weak area next to a strong one on stock, price, staff and audience for the same period. The clearest difference is the likely cause.', []),
+    link: function () { return 'The good news is that a drop in one place is much easier to pin down than one spread across the whole business.'; },
+    impact: function (c) { return 'Fixing that one weak spot could lift your overall ' + c.o + ' without touching anything else.'; },
+    why: function () { return [E('Something specific to that product, source or location may differ, such as stock, staff, pricing or audience.', 'Put the weak area next to a strong one on stock, price, staff and audience for the same period. Whatever stands out most is your best lead.', []),
       E('The weak area may receive a different type of visitor with lower intent.', 'Compare where visitors to the weak and strong areas come from. Different sources support this.', ['targeting'])]; },
     check: function () { return 'Compare the weak area against a strong one on the same measures, over the same period.'; },
-    action: function (c) { return 'In your sales or analytics reports, put the weak product, source or store next to your strongest one for the same month. The first clear difference is a good place to look next.'; },
+    action: function (c) { return 'In your sales or analytics reports, put the weak product, source or store next to your best one for the same month. Whatever difference jumps out first is where to dig.'; },
     confirm: function () { return 'Results split by product, source or location'; },
     record: function () { return 'Results split by the area where the drop concentrates'; } });
 
@@ -711,12 +711,12 @@
       if (!e.length) return null;
       return e.concat(c.any('q8', ['no_help', 'browsing', 'price', 'payment'])); },
     area: function () { return 'what happens when shoppers are in the store'; },
-    link: function () { return 'People are coming in, so part of the gap may sit between arriving and buying.'; },
-    impact: function (c) { return 'Visitors who leave without buying are the ones marketing has already brought in, so this step matters before adding footfall.'; },
+    link: function () { return 'People are coming in, so the gap may be somewhere between walking in and buying.'; },
+    impact: function (c) { return 'The people who walk out empty-handed are the ones your marketing already brought in, so this is worth fixing before you chase more footfall.'; },
     why: function () { return [E('Shoppers may not get help at the moment they need it.', 'Have staff note the reason for visible walk-outs for two weeks. Frequent no-help reasons support this.', ['staff']),
       E('Prices or options may not match what they expected from your marketing.', 'Compare the prices and items in your recent ads with what is on the shelf. Mismatches support this.', ['creative', 'pricing', 'promo'])]; },
     check: function () { return 'For two weeks, have staff note why shoppers who leave without buying did not purchase.'; },
-    action: function () { return 'Ask staff to log a quick reason for visible walk-outs for two weeks, next to till records for the same days. This shows whether staffing, stock or price comes up most.'; },
+    action: function () { return 'For two weeks, ask staff to jot down a quick reason whenever someone walks out without buying, and line it up with the till records for those days. You’ll quickly see whether it’s staffing, stock or price.'; },
     confirm: function () { return 'Staff notes on lost sales next to till records'; },
     record: function () { return 'Lost-sale notes alongside till records'; } });
 
@@ -725,10 +725,10 @@
     when: function (c) { var e = c.any('q6', ['improving']).concat(c.any('q9', ['many_return', 'profitable', 'improves', 'stronger_after', 'relevant', 'match', 'clear_proof', 'nearby', 'in_area', 'clear']));
       return e.length ? e : null; },
     area: function (c) { return 'where your next ' + c.o + ' are most likely to come from'; },
-    link: function () { return 'Your answers do not point to an obvious leak, so the useful question is which source can grow without losing quality.'; },
-    impact: function (c) { return 'Before spending more, it helps to know whether your strongest source can take more budget without the quality of ' + c.o + ' dropping.'; },
-    why: function (c) { return [E('Your best-performing source may have room to grow before returns fall.', 'Increase spend or effort on that source in small steps and watch cost per ' + SINGLE[c.b] + '. A stable cost supports this.', ['budget']),
-      E('A second source may be performing better than it looks because it is not fully tracked.', 'Ask new customers how they found you for a month and compare with your reported sources. A source that shows up more when asked supports this.', ['tracking', 'new_channel'])]; },
+    link: function () { return 'Nothing in your answers points to an obvious leak, so the real question is which source can grow without the quality dropping.'; },
+    impact: function (c) { return 'Before you spend more, it’s worth knowing whether your best source can take more budget without the quality of ' + c.o + ' slipping.'; },
+    why: function (c) { return [E('Your best-performing source may have room to grow before returns fall.', 'Increase spend or effort on that source in small steps and watch cost per ' + SINGLE[c.b] + '. If the cost stays steady, there’s room to grow it.', ['budget']),
+      E('A second source may be performing better than it looks because it is not fully tracked.', 'Ask new customers how they found you for a month and compare with your reported sources. If a source comes up more than your reports suggest, it’s doing more than you think.', ['tracking', 'new_channel'])]; },
     check: function (c) { return 'Compare ' + c.o + ' and cost per ' + SINGLE[c.b] + ' by source over the last three months, and check whether quality held as volume rose.'; },
     action: function (c) {
       var best = (c.val('q10') || []).filter(function (x) { return ['cant_tell', 'not_sure', 'none_produced', 'have_none', 'another', 'other'].indexOf(x) < 0; }).map(function (x) { return c.label('q10', x); })[0];
@@ -741,9 +741,9 @@
     when: function (c) { var e = c.any('q5', ['none']).concat(c.any('q6', ['not_spending'], 0.5)).concat(c.any('q10', ['referrals', 'existing', 'direct', 'platforms', 'have_none'], 0.5));
       return c.is('q5', 'none') ? e : null; },
     area: function (c) { return 'which of your current sources could grow before you add paid marketing'; },
-    link: function () { return 'Without active marketing, the first step is understanding what already brings customers in.'; },
-    impact: function (c) { return 'Knowing where current ' + c.o + ' come from tells you what to amplify first and what a paid channel has to beat.'; },
-    why: function () { return [E('Referrals or existing customers may be an underused source.', 'Count how many new customers in the last three months came from referrals or repeat customers. A meaningful share with little effort supports this.', ['retention']),
+    link: function () { return 'You’re not actively marketing yet, so the first job is understanding what already brings customers in.'; },
+    impact: function (c) { return 'Knowing where your current ' + c.o + ' come from tells you what to build on first, and what any paid channel has to beat.'; },
+    why: function () { return [E('Referrals or existing customers may be an underused source.', 'Count how many new customers in the last three months came from referrals or repeat customers. If a decent share came that way without much effort, it’s worth putting more into.', ['retention']),
       E('You may be visible in places, such as maps or platforms, that could do more with little cost.', 'Check your maps and platform profiles for complete details and recent reviews. Gaps support this.', ['local', 'pages'])]; },
     check: function (c) { return 'Record where each new customer came from for the next month before choosing a paid channel.'; },
     action: function (c) { return 'For the next month, record how every new customer found you in your sales or booking records. This gives you a baseline to judge any paid marketing against later.'; },
@@ -802,7 +802,10 @@
     });
 
     applyAttempts(c, findings);
-    return { c: c, steps: steps, findings: findings, overview: overview(c, findings), report: report(c, findings) };
+    var ov = overview(c, findings), rp = report(c, findings);
+    var nExp = rp.explain.reduce(function (t, g) { return t + g.items.length; }, 0);
+    ov.locked = { areas: rp.supporting.length, explanations: nExp, steps: rp.actions.length, metrics: rp.measures.length, tried: c.attempts.length > 0 };
+    return { c: c, steps: steps, findings: findings, overview: ov, report: rp };
   }
 
 
@@ -833,41 +836,40 @@
   // Note, replacement check and first action for a finding linked to earlier changes.
   function attemptEffect(c, rel, f) {
     if (c.attempts.length > 1) return combinedEffect(c, rel, f);
-    var nouns = nounList(rel), all = false, area = f ? f.area : 'this area';
-    var combined = all ? ' You gave one result for all your changes together, so it can’t be tied to ' + (rel.length > 1 ? 'these changes' : 'this one') + ' alone.' : '';
-    var before = 'compare ' + c.o + ' for equal periods before and after the change, using your own records' + (c.paid ? ' rather than ad reports alone' : '');
+    var nouns = nounList(rel), area = f ? f.area : 'this area';
+    var before = 'compare ' + c.o + ' for the same length of time before and after the change, using your own records' + (c.paid ? ' instead of just the ad reports' : '');
     var partial = c.b === 'A' || c.b === 'B' ? 'part of your traffic' : 'some of your customers or locations';
     var o = c.outcome, e = {};
     if (o === 'improved') {
-      e.note = 'You said results improved after ' + nouns + '. That is encouraging, but it doesn’t confirm this issue is solved or which change made the difference.' + combined;
-      e.short = 'You said results improved after ' + nouns + ', so the check below confirms that before anything else.';
-      e.check = cap(before) + ', and check whether ' + (f ? f.area : 'this area') + ' has actually improved and held.';
-      e.quick = 'Look again at ' + area + ' since ' + nouns + ', and check in your own records whether ' + c.o + ' improved and the improvement has held.';
-      e.title = 'Confirm what improved'; e.tag = 'Your change aimed at this and results improved, which fits. Confirm it in your records.';
+      e.note = 'You said things got better after ' + nouns + '. That’s good news, though it doesn’t prove this is fixed, or that the change is what did it.';
+      e.short = 'You said things got better after ' + nouns + ', so start by making sure that’s really the case.';
+      e.check = cap(before) + ', and see whether ' + area + ' has actually improved and stayed that way.';
+      e.quick = 'Take another look at ' + area + ' since ' + nouns + ', and check in your own records that ' + c.o + ' really went up and stayed up.';
+      e.title = 'Confirm what improved'; e.tag = 'You’ve already changed this and things improved, which fits. Worth confirming in your own numbers.';
     } else if (o === 'no_change') {
-      e.note = 'You said there was no clear change after ' + nouns + '. That doesn’t rule this area out. The change may not be working everywhere, may have been judged too soon or on the wrong result, or another explanation may matter more.' + combined;
-      e.short = 'You said there was no clear change after ' + nouns + '. That doesn’t rule this area out, so the check below starts there.';
-      e.check = 'First check ' + nouns + ' everywhere people see it, for example on phones as well as computers, to confirm it works as intended. Then ' + before + '. If both hold up, move on to the other explanations.';
-      e.quick = 'Check that ' + nouns + ' works as intended everywhere people see it, including on phones, then look again at ' + area + '.';
-      e.title = 'Check your earlier change before trying something new'; e.tag = 'You have already changed this without a clear improvement. Confirm the change works as intended before ruling this out.';
+      e.note = 'You said nothing much changed after ' + nouns + '. That doesn’t rule this out, though. The change might not be working everywhere, it might have been judged too early or on the wrong number, or something else might matter more.';
+      e.short = 'You said nothing much changed after ' + nouns + '. That doesn’t rule this out, so start by checking the change itself.';
+      e.check = 'Start by checking ' + nouns + ' everywhere people would see it, phones included, to make sure it actually works. Then ' + before + '. If both look fine, move on to the other possible causes below.';
+      e.quick = 'Make sure ' + nouns + ' actually works everywhere people see it, phones included, then take another look at ' + area + '.';
+      e.title = 'Check your earlier change before trying something new'; e.tag = 'You’ve already changed this and nothing much moved. Make sure the change actually works before ruling this out.';
     } else if (o === 'worse') {
-      e.note = 'You said results got worse after ' + nouns + '. It’s worth checking whether the change caused the drop, or whether something else changed at the same time, such as season, prices or budget.' + combined;
-      e.short = 'You said results got worse after ' + nouns + ', so the check below looks at whether that change caused it.';
-      e.check = cap(before) + ', and list anything else that changed in the same weeks. If the drop lines up with the change and nothing else, consider reversing it, or testing it on ' + partial + ' first.';
-      e.quick = 'Compare ' + c.o + ' before and after ' + nouns + ', look at ' + area + ' over the same weeks, and note anything else that changed then.';
-      e.title = 'Find out why results got worse'; e.tag = 'You changed this and results got worse. Check whether the change itself caused it.';
+      e.note = 'You said things got worse after ' + nouns + '. It’s worth checking whether that change caused it, or whether something else shifted at the same time, like the season, prices or budget.';
+      e.short = 'You said things got worse after ' + nouns + ', so start by checking whether that change is what did it.';
+      e.check = cap(before) + ', and jot down anything else that changed in those weeks. If the drop lines up with your change and nothing else, think about undoing it, or trying it on ' + partial + ' first.';
+      e.quick = 'Compare ' + c.o + ' before and after ' + nouns + ', take another look at ' + area + ' over those weeks, and note anything else that changed.';
+      e.title = 'Find out what made things worse'; e.tag = 'You changed this and things got worse. Check whether the change itself caused it.';
     } else if (o === 'too_early') {
-      e.note = 'You said it’s too early to tell whether ' + nouns + ' has helped.' + combined;
-      e.short = e.note.split('. ')[0].replace(/\.$/, '') + '.';
-      e.check = 'Decide now which result you will judge it on (' + c.o + ', not clicks or enquiries) and on what date, allowing a full buying cycle. Avoid changing it again before then.';
-      e.quick = 'Decide which result you will judge ' + nouns + ' on, and when, and keep an eye on ' + area + ' in the meantime.';
-      e.title = 'Set how you’ll judge your recent change'; e.tag = 'You have already changed this, and it is too early to tell whether it helped.';
+      e.note = 'You said it’s too early to tell whether ' + nouns + ' has helped.';
+      e.short = e.note;
+      e.check = 'Decide now what you’ll judge it on (' + c.o + ', rather than clicks or enquiries) and when, giving it a full buying cycle. Try not to change it again before then.';
+      e.quick = 'Decide what you’ll judge ' + nouns + ' on and when, and keep an eye on ' + area + ' in the meantime.';
+      e.title = 'Set how you’ll judge your recent change'; e.tag = 'You’ve already changed this, and it’s too early to know if it helped.';
     } else {
-      e.note = (o === 'not_measured' ? 'You said you haven’t measured the effect of ' : 'You didn’t say what happened after ') + nouns + ', so it isn’t yet clear whether it helped.' + combined;
-      e.short = e.note.split('. ')[0].replace(/\.$/, '') + '.';
-      e.check = cap(before) + ', so you know whether ' + nouns + ' helped before changing anything else in this area.';
-      e.quick = 'Compare ' + c.o + ' for equal periods before and after ' + nouns + ', and look at ' + area + ' over the same periods.';
-      e.title = 'Measure the change you already made'; e.tag = 'You have already changed this, but its effect has not been measured yet.';
+      e.note = (o === 'not_measured' ? 'You said you haven’t measured what ' + nouns + ' did' : 'You didn’t say what happened after ' + nouns) + ', so we don’t know yet whether it helped.';
+      e.short = e.note;
+      e.check = cap(before) + ', so you know whether ' + nouns + ' helped before you change anything else here.';
+      e.quick = 'Compare ' + c.o + ' for the same length of time before and after ' + nouns + ', and look at ' + area + ' over those periods.';
+      e.title = 'Measure the change you already made'; e.tag = 'You’ve already changed this, but nobody has measured what it did yet.';
     }
     return e;
   }
@@ -889,40 +891,40 @@
   }
   function combinedEffect(c, rel, f) {
     var sev = severalIncluding(c, rel), o = c.outcome, area = f ? f.area : 'this area', e = {};
-    var timing = 'List when each change went live, then look at ' + c.o + ' and the measures linked to ' + area + ' around each of those dates, using your own records';
-    var cant = ' We can’t tell which change contributed.';
+    var timing = 'Write down when each change went live and look at ' + c.o + ' around each of those dates in your own records';
     if (o === 'improved') {
-      e.note = 'You reported better results after ' + sev + '.' + cant.replace('contributed', 'helped') + ' It also doesn’t confirm this area is resolved.';
-      e.short = 'You reported better results after ' + sev + '.' + cant.replace('contributed', 'helped');
-      e.check = timing + '. Confirm the improvement has held before crediting any one change.';
-      e.quick = 'List when each of your recent changes went live, then look at ' + area + ' and ' + c.o + ' around those dates to see whether the improvement has held.';
+      e.note = 'You reported better results after ' + sev + '. We can’t tell which change helped, and it doesn’t mean this is fully fixed.';
+      e.short = 'You reported better results after ' + sev + '. We can’t tell which change helped.';
+      e.check = timing + '. Make sure the improvement has held before giving any one change the credit.';
+      e.quick = 'Write down when each of your recent changes went live, then look at ' + area + ' and ' + c.o + ' around those dates to see if the improvement held.';
       e.title = 'Check timing before crediting any one change';
     } else if (o === 'worse') {
-      e.note = 'You reported worse results after ' + sev + '.' + cant;
+      e.note = 'You reported worse results after ' + sev + '. We can’t tell which change contributed.';
       e.short = e.note;
-      e.check = timing + '. Also note anything else that changed then, such as season, prices or budget. Do this before deciding what to reverse.';
-      e.quick = 'List when each of your recent changes went live, and look at ' + area + ' and ' + c.o + ' around those dates before reversing anything.';
+      e.check = timing + ', and note anything else that changed then, like the season, prices or budget. Do this before you undo anything.';
+      e.quick = 'Write down when each of your recent changes went live, and look at ' + area + ' and ' + c.o + ' around those dates before undoing anything.';
       e.title = 'Check timing before reversing anything';
     } else if (o === 'no_change') {
-      e.note = 'You reported no clear change after ' + sev + '.' + cant.replace('contributed', 'helped or hurt') + ' This area isn’t ruled out.';
+      e.note = 'You reported no clear change after ' + sev + '. We can’t tell whether any one of them helped or hurt, so this is still worth looking at.';
       e.short = e.note;
-      e.check = 'Check each change works as intended wherever people see it, for example on phones as well as computers. Then ' + lc(timing) + '. If they all hold up, move on to the other explanations.';
-      e.quick = 'Check that each of your recent changes works as intended everywhere people see it, including on phones, then look again at ' + area + '.';
+      e.check = 'Make sure each change actually works everywhere people see it, phones included. Then ' + lc(timing) + '. If they all hold up, move on to the other possible causes below.';
+      e.quick = 'Make sure each of your recent changes actually works everywhere people see it, phones included, then take another look at ' + area + '.';
       e.title = 'Check your earlier changes before trying something new';
     } else if (o === 'too_early') {
-      e.note = 'You said it’s too early to tell how ' + sev + ' have affected results.';
+      e.note = 'You said it’s too early to tell how ' + sev + ' have worked out.';
       e.short = e.note;
-      e.check = 'Note when each change went live, and decide now which result you will judge them on (' + c.o + ', not clicks or enquiries) and on what date, allowing a full buying cycle.';
-      e.quick = 'Decide which result you will judge your recent changes on, and when, and keep an eye on ' + area + ' in the meantime.';
+      e.check = 'Note when each change went live, and decide now what you’ll judge them on (' + c.o + ', rather than clicks or enquiries) and when, giving them a full buying cycle.';
+      e.quick = 'Decide what you’ll judge your recent changes on and when, and keep an eye on ' + area + ' in the meantime.';
       e.title = 'Set how you’ll judge your recent changes';
     } else {
-      e.note = (o === 'not_measured' ? 'You said you haven’t measured the effect of ' : 'You didn’t say what happened after ') + sev + ', made together, so it isn’t yet clear whether they helped.';
+      e.note = (o === 'not_measured' ? 'You said you haven’t measured what ' : 'You didn’t say what happened after ') + sev + (o === 'not_measured' ? ' did' : '') + ', so we don’t know yet whether they helped.';
       e.short = e.note;
-      e.check = timing + ', so you know whether the changes helped before changing anything else in this area.';
-      e.quick = 'List when each of your recent changes went live, and compare ' + c.o + ' and ' + area + ' before and after those dates.';
+      e.check = timing + ', so you know whether the changes helped before you change anything else here.';
+      e.quick = 'Write down when each of your recent changes went live, and compare ' + c.o + ' and ' + area + ' before and after those dates.';
       e.title = 'Measure the changes you already made';
     }
-    e.tag = 'Changed as one of several changes (combined result: ' + COMBINED[o] + '). We can’t tell this change’s part in it.';
+    e.tag = 'You changed this along with other things' + ({ improved: ', and overall things got better', worse: ', and overall things got worse', no_change: ', and overall nothing much moved',
+      too_early: ', and it’s too early to tell how it went', not_measured: ', and the result hasn’t been measured yet' }[o] || '') + '. We can’t tell what part this one played.';
     return e;
   }
   function applyAttempts(c, F) {
@@ -948,26 +950,26 @@
     var n = { mismatch: null, conflicts: [], unknowns: [] };
     var gs = D.GOAL_STAGE[c.goal];
     if (gs === 'reach' && c.st7 && c.st7 !== 'reach' && STAGE_ORDER.indexOf(c.st7) > 0 && !c.is('q7', 'unknown')) {
-      n.mismatch = 'You want to ' + lc(c.label('q4', c.goal)) + ', but your answers suggest people already get as far as “' + lc(c.label('q7', c.val('q7'))) + '”. It may be useful to investigate that step before increasing reach, so the extra people you bring in are not lost at the same point.';
+      n.mismatch = 'You want to ' + lc(c.label('q4', c.goal)) + ', but you also said people already get as far as “' + lc(c.label('q7', c.val('q7'))) + '”. It’s worth fixing that step before paying to bring in more people, or the new ones may drop out in the same place.';
     }
     if (c.is('q5', 'none') && c.is('q6', 'spend_up_flat', 'profit_flat', 'same_fell'))
-      n.conflicts.push('You said you are not actively marketing, but also described a change in marketing spending. This report treats the spending answer as context only.');
+      n.conflicts.push('You said you’re not actively marketing, but you also described a change in marketing spend, so we’ve treated that spending answer as background only.');
     if (c.goal === 'noshow' && c.is('q9', 'uncommon'))
-      n.conflicts.push('You chose missed appointments as your priority but also said they are uncommon, so this report looks at other parts of the journey as well.');
+      n.conflicts.push('Missed appointments are your priority, but you also said they don’t happen often, so we’ve looked at the rest of the journey too.');
     if (c.is('q6', 'improving') && top && top.id !== 'growth' && top.strength >= 2)
-      n.conflicts.push('You said results are improving, yet other answers point to a specific gap. Both can be true: growth can continue while one step leaks.');
+      n.conflicts.push('You said things are improving, and your other answers still point to a gap. Both can be true, since a business can grow while one step quietly leaks.');
     var named = (c.val('q10') || []).filter(function (x) { return ['cant_tell', 'none_produced', 'another', 'not_sure', 'have_none'].indexOf(x) < 0; });
-    if (named.length && !c.linked) n.unknowns.push('Whether the channels you named as working best actually produce the most ' + c.o + '. That is your current impression, and your tracking answers suggest it has not yet been checked against ' + c.o + '.');
-    else if (named.length && c.linked) n.unknowns.push('Whether platform reports and your own records agree. Different reports can claim the same sale, so they should not be added together.');
-    if (c.is('q7', 'unknown')) n.unknowns.push('Where in the journey most people drop out.');
-    var q8 = c.val('q8'); if (q8 && (q8 === 'no_feedback' || (Array.isArray(q8) && q8.indexOf('no_feedback') >= 0))) n.unknowns.push('What customers themselves say holds them back, since this feedback is not collected yet.');
-    if (c.longCycle || c.is('q6', 'long_cycle')) n.unknowns.push('How recent enquiries will turn out. With a longer sales cycle, compare groups of enquiries that are at least a full cycle old before judging a channel.');
-    if (c.b === 'B' && c.sub === 'adfunded') n.unknowns.push('How engaged users are over time. For an ad-funded app, repeated use matters more than paid conversion.');
-    if (c.b === 'H') n.unknowns.push('How many people who stop have simply finished what they came for. Completing a programme is a good outcome, not churn.');
-    if (c.b === 'G' && c.goal === 'retain') n.unknowns.push('Which return visits are genuinely appropriate. Not every client needs another appointment.');
-    if (c.b === 'E') n.unknowns.push('How many reservations will complete. A reservation is not yet a completed sale or lease.');
-    if (c.b === 'I') n.unknowns.push('Shopper sell-through, where you only see retailer orders. Retailer reorders do not confirm that shoppers are buying again.');
-    n.unknowns.push('Whether these patterns hold in your records. Your answers describe what you have noticed, and nothing here has been checked against your accounts.');
+    if (named.length && !c.linked) n.unknowns.push('Whether the channels you think work best really bring in the most ' + c.o + '. From your tracking answers, that’s a gut feel for now, and it hasn’t been checked.');
+    else if (named.length && c.linked) n.unknowns.push('Whether the platform reports match your own records. Different platforms often claim the same sale, so their numbers can’t simply be added up.');
+    if (c.is('q7', 'unknown')) n.unknowns.push('Where in the journey most people drop out. You said you don’t know yet, which is fine, and finding out is part of the work.');
+    var q8 = c.val('q8'); if (q8 && (q8 === 'no_feedback' || (Array.isArray(q8) && q8.indexOf('no_feedback') >= 0))) n.unknowns.push('What customers themselves would say is holding them back, because you’re not collecting that feedback yet.');
+    if (c.longCycle || c.is('q6', 'long_cycle')) n.unknowns.push('How your recent enquiries will turn out. With a long sales cycle, only judge a channel on enquiries that are at least one full cycle old.');
+    if (c.b === 'B' && c.sub === 'adfunded') n.unknowns.push('How engaged people stay over time. For an ad-funded app, coming back matters more than paying.');
+    if (c.b === 'H') n.unknowns.push('How many of the people who stop have simply finished what they came for. That’s a good result, and shouldn’t count as losing them.');
+    if (c.b === 'G' && c.goal === 'retain') n.unknowns.push('Which return visits actually make sense. Not every client needs another appointment.');
+    if (c.b === 'E') n.unknowns.push('How many reservations will go through. A reservation still isn’t a completed sale or lease.');
+    if (c.b === 'I') n.unknowns.push('Whether shoppers are actually buying, since you only see retailer orders. A retailer reordering doesn’t prove shoppers are coming back.');
+    n.unknowns.push('Whether your records back this up. Everything here comes from what you’ve noticed, and none of it has been checked against your accounts.');
     return n;
   }
 
@@ -979,6 +981,8 @@
     return BR[c.b].word;
   }
 
+  // "You told us most people stop at X" or, when the first part is a question we asked, "When we asked about Y, you said Z"
+  function toldUs(ev) { var j = joinRefers(ev); return /^when we asked/.test(j) ? cap(j) : 'You told us ' + j; }
   function joinRefers(ev) {
     // Answers from the same question are said once: "your answer on X was “a” and “b”"
     var groups = [];
@@ -998,6 +1002,18 @@
   }
   function supporting(F) { return F.slice(1).filter(function (f) { return f.evidence.length > 0; }); }
 
+  // Why this matters, in their own terms. Hedged on purpose: we know what they told us, not their numbers.
+  function stakes(c, f) {
+    var q6 = c.val('q6');
+    if (q6 === 'spend_up_flat') return 'You said spending went up and ' + c.o + ' didn’t follow. Until the cause is clear, more budget may just buy more of the same.';
+    if (q6 === 'same_fell') return 'You said spending stayed about the same while ' + c.o + ' fell. Something changed, and waiting for it to sort itself out tends to cost more than finding it.';
+    if (q6 === 'profit_flat') return 'You said sales grew but profit didn’t. More volume on the same terms may only make that gap bigger.';
+    if (q6 === 'promo') return 'You told us your results mainly come when you run promotions. Every promotion may be teaching customers to wait for the next one.';
+    if (q6 === 'improving') return 'Things are improving, which is exactly when it’s easiest to put more money behind the wrong thing.';
+    if (q6 === 'not_spending' || q6 === 'new') return 'You’re early, which makes this the cheapest time to find the weak spot, before money goes into marketing you can’t judge.';
+    return f.fallback ? 'Until you can see which marketing produces ' + c.o + ', every budget decision is a guess.' : f.impact;
+  }
+
   // Free overview. Deliberately limited: one priority finding, a two-sentence explanation tied to their
   // answers, one check they can do now, and the unlock invitation. Supporting findings, alternative
   // explanations, the action plan and metrics stay in the detailed diagnostic.
@@ -1009,9 +1025,10 @@
     else {
       // Always the priority finding's own leading cause. An earlier fix does not rule it out;
       // alternative explanations stay in the detailed report.
-      o.why = 'You told us that ' + joinRefers(f.evidence.slice(0, 2)) + '. This suggests ' + lc(f.why[0].c.replace(/\.$/, '')) + '.';
+      o.why = toldUs(f.evidence.slice(0, 2)) + '. This suggests ' + lc(f.why[0].c.replace(/\.$/, '')) + '.';
     }
     o.check = f.attempt ? f.attempt.quick : f.check;
+    o.stakes = stakes(c, f);
     o.invite = 'Get your detailed breakdown, prioritised next steps and the metrics to track.';
     o.sub = 'See what could explain this, what to prioritise and what to measure.';
     return o;
@@ -1069,7 +1086,7 @@
       r.situation.push(['Already tried', c.attempts.map(function (x) { return x === 'other' ? (c.otherTxt ? 'Other: ' + c.otherTxt : 'Something else') : c.label('q12', x); }).join('; ')]);
       r.situation.push([c.attempts.length > 1 ? 'Result of those changes together' : 'Result of that change', cap(OUTCOME_LABEL[c.outcome])]);
     } else if (c.nothingTried) r.situation.push(['Already tried', 'Nothing yet']);
-    r.reported = f.fallback ? 'Your answers do not yet point clearly to one stage of the journey.' : 'You told us that ' + joinRefers(f.evidence) + '.';
+    r.reported = f.fallback ? 'Your answers don’t point clearly to one stage of the journey yet.' : toldUs(f.evidence) + '.';
     r.notes = c.notes;
     r.legacy = !!c.a._legacyAttempt;
 
@@ -1079,9 +1096,9 @@
     // Goal and reported drop-off disagree: always say so, in a form that fits the priority
     if (n.mismatch) r.priorityWhy += ' ' + (['reach_fit', 'message', 'qualification', 'click_gap'].indexOf(f.id) < 0 ? n.mismatch :
       'You want to ' + lc(c.label('q4', c.goal)) + ', and this finding fits that goal. But you also said people already get as far as “' + lc(c.label('q7', c.val('q7'))) + '”, so check that later step too before bringing in more people.');
-    if (c.is('q6', 'spend_up_flat')) r.priorityWhy += ' Higher spending without more ' + c.o + ' can mean new spending reached less suitable people, or that a later step is limiting results. It does not on its own show which channel is responsible.';
-    if (c.is('q6', 'new', 'not_spending')) r.priorityWhy += ' Since you are early or not spending yet, treat this as a readiness check rather than evidence of a decline.';
-    r.strength = f.fallback ? '' : f.strength < 2 ? 'Only one of your answers points here, so treat it as a lead to check.' : 'Several of your answers point here.';
+    if (c.is('q6', 'spend_up_flat')) r.priorityWhy += ' And since you’re spending more without more ' + c.o + ' to show for it, either the extra money is reaching the wrong people or something further along is losing them. Your answers alone can’t say which channel is to blame.';
+    if (c.is('q6', 'new', 'not_spending')) r.priorityWhy += ' You’re early or not spending yet, so treat this as getting ready, rather than a sign that something has gone wrong.';
+    r.strength = f.fallback ? '' : f.strength < 2 ? 'Only one of your answers points here, so treat it as a lead worth checking.' : 'Several of your answers point here.';
 
     // 3. Supporting findings (only those backed by answers)
     r.supporting = supporting(F);
@@ -1101,23 +1118,23 @@
     if (f.attempt) {
       acts.push({ src: f.id, title: f.attempt.title, text: f.attempt.text });
       if (c.outcome === 'improved') { if (r.supporting[0]) acts.push({ src: r.supporting[0].id, title: cap(r.supporting[0].area), text: r.supporting[0].action }); }
-      else acts.push({ src: f.id, title: 'Then look at ' + lc(f.area), text: (c.outcome === 'no_change' ? (c.attempts.length > 1 ? 'If the earlier changes hold up, look further at this area. ' : 'If the earlier change holds up, look further at this area. ') : c.outcome === 'worse' ? 'Once you know what caused the drop, look further at this area. ' : 'While you wait for a clear result, you can still look at this area. ') + f.action });
+      else acts.push({ src: f.id, title: 'Then look at ' + lc(f.area), text: (c.outcome === 'no_change' ? (c.attempts.length > 1 ? 'If your earlier changes check out, this is the next place to look. ' : 'If your earlier change checks out, this is the next place to look. ') : c.outcome === 'worse' ? 'Once you know what caused the drop, come back to this. ' : 'While you wait to see how your change does, you can still look into this. ') + f.action });
     } else acts.push({ src: f.id, title: cap(f.area), text: f.action });
     r.supporting.forEach(function (x) { if (acts.length < 3 && !acts.some(function (y) { return y.src === x.id; })) acts.push(x.attempt ? { src: x.id, title: x.attempt.title + ' (' + x.area + ')', text: x.attempt.text } : { src: x.id, title: cap(x.area), text: x.action }); });
     var unrelated = c.attempts.filter(function (x) { return !shown.some(function (y) { return y.attempt && y.attempt.codes.indexOf(x) >= 0; }); });
     if (unrelated.length && acts.length < 3 && c.attempts.length > 1) {
       var linked = shown.some(function (y) { return y.attempt; });
-      acts.push(linked ? { src: 'attempts', title: 'Include your other changes in the timing check',
-          text: (unrelated.length > 1 ? 'Your changes to ' : 'Your change to ') + (function (n) { return n.length === 1 ? n[0] : n.slice(0, -1).join(', ') + ' and ' + n[n.length - 1]; })(unrelated.map(function (x) { return SHORT[x] || 'another area'; })) + ' ' + (unrelated.length > 1 ? 'were' : 'was') + ' part of the same combined result, so add ' + (unrelated.length > 1 ? 'them' : 'it') + ' to the list of changes and dates above rather than judging ' + (unrelated.length > 1 ? 'them' : 'it') + ' separately.' }
-        : { src: 'attempts', title: 'Judge your earlier changes together', text: 'You reported ' + COMBINED[c.outcome] + ' after ' + severalIncluding(c, []) + '. We can’t tell which change contributed. List when each one went live and look at ' + c.o + ' around those dates before building on or reversing any of them.' });
+      acts.push(linked ? { src: 'attempts', title: 'Add your other changes to that list',
+          text: (unrelated.length > 1 ? 'Your changes to ' : 'Your change to ') + (function (n) { return n.length === 1 ? n[0] : n.slice(0, -1).join(', ') + ' and ' + n[n.length - 1]; })(unrelated.map(function (x) { return SHORT[x] || 'another area'; })) + ' ' + (unrelated.length > 1 ? 'were' : 'was') + ' part of the same overall result, so put ' + (unrelated.length > 1 ? 'them' : 'it') + ' on that list of dates too, and judge everything together.' }
+        : { src: 'attempts', title: 'Judge your earlier changes together', text: 'You reported ' + COMBINED[c.outcome] + ' after ' + severalIncluding(c, []) + '. We can’t tell which change contributed. Write down when each one went live and look at ' + c.o + ' around those dates before you build on any of them or undo them.' });
     } else if (unrelated.length && acts.length < 3) {
       var un = nounList(unrelated);
-      var t = { improved: 'You said results improved. Keep an eye on whether that holds, and judge it on ' + c.o + ' rather than clicks or enquiries.',
-        no_change: 'You said there was no clear change. Before building on ' + un + ', check it was judged on ' + c.o + ' over a long enough period.',
-        worse: 'You said results got worse. Check whether ' + un + ' caused it, or something else that changed at the same time.',
-        too_early: 'You said it is too early to tell. Set the date and the result you will judge it on.',
+      var t = { improved: 'You said things got better. Keep an eye on whether that lasts, and judge it on ' + c.o + ' rather than clicks or enquiries.',
+        no_change: 'You said nothing much changed. Before building on ' + un + ', make sure it was judged on ' + c.o + ' and given long enough.',
+        worse: 'You said things got worse. Check whether ' + un + ' caused it, or something else that changed around the same time.',
+        too_early: 'You said it’s too early to tell. Pick the date and the number you’ll judge it on.',
         not_measured: 'Compare ' + c.o + ' before and after ' + un + ' so you know whether it helped.', unknown: 'Compare ' + c.o + ' before and after ' + un + ' so you know whether it helped.' }[c.outcome];
-      acts.push({ src: 'attempts', title: 'Judge ' + un + ' separately', text: 'This doesn’t relate directly to the areas above. ' + t });
+      acts.push({ src: 'attempts', title: 'Keep an eye on ' + un, text: 'This isn’t directly linked to what’s above, but it’s still worth tracking. ' + t });
     }
     r.actions = acts.slice(0, 3);
 
@@ -1141,22 +1158,22 @@
   }
 
   /* ---------- Plain-text versions for the lead record ---------- */
-  function overviewText(o) { return [o.label + ': ' + o.main, o.why, 'Check first: ' + o.check].join('\n'); }
+  function overviewText(o) { return [o.label + ': ' + o.main, o.why, 'Why this matters: ' + o.stakes, 'Check first: ' + o.check].join('\n'); }
   function reportText(r) {
     var L = [];
     L.push('1. YOUR SITUATION'); r.situation.forEach(function (x) { L.push(x[0] + ': ' + x[1]); });
     L.push(r.reported); if (r.notes) L.push('Your notes: ' + r.notes);
-    L.push('', '2. PRIORITY FINDING: ' + r.priority.area, r.priorityWhy);
+    L.push('', '2. THE MAIN THING TO LOOK AT: ' + r.priority.area, r.priorityWhy);
     if (r.priority.attempt) L.push(r.priority.attempt.note);
     if (r.strength) L.push(r.strength);
-    if (r.supporting.length) { L.push('', '3. SUPPORTING FINDINGS'); r.supporting.forEach(function (x) { L.push('- ' + x.area + ': ' + x.impact + (x.attempt ? ' ' + x.attempt.note : '')); }); }
-    L.push('', '4. WHAT COULD EXPLAIN THIS (possible, not confirmed)');
+    if (r.supporting.length) { L.push('', '3. ALSO WORTH A LOOK'); r.supporting.forEach(function (x) { L.push('- ' + x.area + ': ' + x.impact + (x.attempt ? ' ' + x.attempt.note : '')); }); }
+    L.push('', '4. WHAT COULD BE BEHIND IT (possible causes, none confirmed yet)');
     r.explain.forEach(function (g) { L.push(g.area + ':'); g.items.forEach(function (w) { L.push('- ' + w.c + (w.tag ? ' (' + w.tag + ')' : '')); }); });
     r.conflicts.forEach(function (x) { L.push('Note: ' + x); });
-    L.push('Not yet known: ' + r.unknowns.join(' | '));
-    L.push('', '5. WHAT TO CHECK');
-    r.checks.forEach(function (g) { L.push(g.area + ':'); if (g.first) L.push('- First: ' + g.first); g.items.forEach(function (w) { L.push('- ' + w.k); }); });
-    L.push('Records that would help: ' + r.records.join(' | '));
+    L.push('What we don’t know yet: ' + r.unknowns.join(' | '));
+    L.push('', '5. HOW TO CHECK');
+    r.checks.forEach(function (g) { L.push(g.area + ':'); if (g.first) L.push('- Start here: ' + g.first); g.items.forEach(function (w) { L.push('- ' + w.k); }); });
+    L.push('Records worth pulling together: ' + r.records.join(' | '));
     L.push('', '6. WHAT TO DO NEXT'); r.actions.forEach(function (a, i) { L.push((i + 1) + '. ' + a.title + ': ' + a.text); });
     L.push('', '7. WHAT TO MEASURE'); r.measures.forEach(function (m) { L.push('- ' + m[0] + ': ' + m[1]); });
     return L.join('\n');

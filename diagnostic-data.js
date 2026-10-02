@@ -119,7 +119,7 @@
       o.push(O('unknown', 'We do not know', X));
       return { t: 'Where do people most often stop progressing?', o: o };
     },
-    q8: function (c) { return { t: c.sub === 'demo' ? 'How do you know a new customer is getting value during a pilot or onboarding?' : 'How do you know a new user has received value?', refer: 'your answer on how you know users get value was', o: [
+    q8: function (c) { return { t: c.sub === 'demo' ? 'How do you know a new customer is getting value during a pilot or onboarding?' : 'How do you know a new user has received value?', refer: 'when we asked about how you know users get value, you said', o: [
       O('tracked_action', 'We track a specific useful action or outcome'), O('logins', 'We mainly track logins or opens'),
       O('setup', 'We mainly track setup completion'), O('feedback_only', 'We hear it in feedback but do not track it'),
       O('undefined', 'We have not defined it yet')] }; },
@@ -172,7 +172,7 @@
         O('basket', 'People add to basket but do not pay', { st: 'convert' }), O('payment', 'Orders fail at payment', { st: 'convert' }),
         O('cancel', 'Orders are cancelled', { st: 'convert' }), O('unknown', 'We do not know', X)] };
     },
-    q8: { t: 'What most limits your ability to serve more customers?', refer: 'your answer on capacity was', o: [
+    q8: { t: 'What most limits your ability to serve more customers?', refer: 'when we asked about capacity, you said', o: [
       O('spare', 'We have spare capacity most of the time'), O('peak_full', 'Quiet periods are the main issue; peak times are full'),
       O('waits', 'Long waits or slow fulfilment'), O('staffing', 'Staffing, stock or availability'),
       O('delivery_area', 'Delivery area or platform availability'), O('not_sure', 'Nothing obvious / Not sure', X)] },
@@ -272,7 +272,7 @@
       O('before_agreement', c.sub === 'rentals' ? 'After viewing, before signing a lease' : 'After viewing or proposal, before an agreement', { st: 'close' }),
       O('finance', c.sub === 'rentals' ? 'After application, during checks or documentation' : 'After reservation, during finance or documentation', { st: 'post' }),
       O('unknown', 'We do not know', X)] }; },
-    q8: { t: 'How well do enquiries match the properties you offer?', refer: 'your answer on enquiry fit was', o: [
+    q8: { t: 'How well do enquiries match the properties you offer?', refer: 'when we asked about enquiry fit, you said', o: [
       O('fit', 'Most fit the budget, location and needs'), O('budget', 'Many have a budget mismatch'),
       O('location_type', 'Many want a different location or property type'), O('later', 'Many are researching for much later'),
       O('junk', 'Many are unreachable, duplicate or spam'), O('not_reviewed', 'We have not reviewed enquiry quality', X)] },
@@ -328,7 +328,7 @@
       O('low_budget', 'Their budget is usually below our range'), O('no_authority', 'They have no clear timeline or buying authority'),
       O('free_advice', 'They mainly want free advice or price comparisons'), O('not_reviewed', 'We do not review this consistently', X)];
       if (c.neutral) o.push(NA);
-      return { t: 'How well do enquiries fit the work you want?', refer: 'your answer on enquiry fit was', o: o }; },
+      return { t: 'How well do enquiries fit the work you want?', refer: 'when we asked about enquiry fit, you said', o: o }; },
     q9: {
       acquire: { t: 'What does your marketing explain most clearly?', o: [O('clear_proof', 'Who we help, the problem we solve and evidence of results'),
         O('capabilities', 'Our services and capabilities'), O('price_offer', 'Our price or offer'),
@@ -466,7 +466,7 @@
       O('no_stock', 'People look for it but cannot find stock', { st: 'convert' }),
       O('slow_sell', 'The product is available but sells slowly', { st: 'convert' }),
       O('no_repeat', 'People try it but rarely buy again', { st: 'retain' }), O('unknown', 'We do not know', X)] }; },
-    q8: { t: 'What do you know about availability in the places your marketing reaches?', refer: 'your answer on availability was', o: [
+    q8: { t: 'What do you know about availability in the places your marketing reaches?', refer: 'when we asked about availability, you said', o: [
       O('reliable', 'Stock and retailer coverage are reliably available'), O('varies', 'Availability varies by store or area'),
       O('oos', 'Out-of-stocks occur often'), O('no_distribution', 'Our marketing reaches areas without distribution'),
       O('no_visibility', 'We do not have reliable store-level visibility')] },
